@@ -1,0 +1,316 @@
+{
+  "meta": {
+    "title": "First Year Resource Hub",
+    "institution": "HBTU",
+    "description": "One organised place for first-year syllabi, lectures, notes and previous-year questions.",
+    "creators": ["Akshat Shukla", "Priyanshu Dixit"],
+    "lastUpdated": "2026-09-01"
+  },
+  "syllabi": [
+    {
+      "id": "chemistry",
+      "title": "Chemistry",
+      "available": true,
+      "url": "https://drive.google.com/file/d/1J7KJZJ98T7iXVrsuY_yDD4bQ1dQECuN7/view?usp=drive_link"
+    },
+    {
+      "id": "pc",
+      "title": "Professional Communication",
+      "available": true,
+      "url": "https://drive.google.com/file/d/12cKKpiNWSj99Muok06Hd5PJWh9a2wAAm/view?usp=drive_link"
+    },
+    {
+      "id": "bem",
+      "title": "Basic Engineering Mechanics",
+      "available": true,
+      "url": "https://drive.google.com/file/d/1PHUIs7BGmtP0LSbmdfCRfIvOLSDMzrPy/view?usp=drive_link"
+    },
+    {
+      "id": "ees",
+      "title": "Environment & Ecology Studies",
+      "available": false,
+      "url": null
+    },
+    {
+      "id": "bet",
+      "title": "Basic Electrical Technology",
+      "available": true,
+      "url": "https://drive.google.com/file/d/1Vzy7SGv8fbdiv-O0uBeokwdqtfcRzkGb/view?usp=drive_link"
+    },
+    {
+      "id": "workshop",
+      "title": "Central Workshop Practice",
+      "available": true,
+      "url": "https://drive.google.com/file/d/17t97wJoAR8HMaVepSvDTkQP_-eTdW4-6/view?usp=drive_link"
+    },
+    {
+      "id": "food-tech",
+      "title": "Food Technology Core",
+      "available": true,
+      "url": "https://drive.google.com/file/d/1BpGbZsCugaMlFYwwagkOjrB5Cuxs1PH-/view?usp=drive_link"
+    }
+  ],
+  "subjects": [
+    {
+      "id": "chemistry",
+      "name": "Chemistry",
+      "shortName": "Chemistry",
+      "icon": "flask",
+      "accent": "violet",
+      "description": "Theory and laboratory foundations, from kinetics to spectroscopy.",
+      "topics": ["Kinetics", "Stereochemistry", "Mechanisms", "Electrochemistry", "Spectroscopy"],
+      "resources": [
+        {
+          "id": "chem-kinetics",
+          "type": "lecture",
+          "title": "Chemical Kinetics",
+          "description": "Complete topic playlist",
+          "url": "https://www.youtube.com/playlist?list=PLgrPoGl4jGdo1G93jv-pkmw5RCHM9xTc-",
+          "available": true
+        },
+        {
+          "id": "chem-stereo",
+          "type": "lecture",
+          "title": "Stereochemistry",
+          "description": "Concept playlist",
+          "url": "https://www.youtube.com/playlist?list=PLLf6O8XdGj03fWMXEe-8QJNVJ-ySOF0jO",
+          "available": true
+        },
+        {
+          "id": "chem-mechanism",
+          "type": "lecture",
+          "title": "Reaction Mechanism",
+          "description": "Complete topic playlist",
+          "url": "https://www.youtube.com/playlist?list=PLgrPoGl4jGdrCd-5rnP6Zz8QwPLt-JMb-",
+          "available": true
+        },
+        {
+          "id": "chem-electro",
+          "type": "lecture",
+          "title": "Electrochemistry",
+          "description": "Concept playlist",
+          "url": "https://www.youtube.com/playlist?list=PLLf6O8XdGj03pNhe069q3fHouzq64Vvsm",
+          "available": true
+        },
+        {
+          "id": "chem-spectroscopy",
+          "type": "lecture",
+          "title": "Spectroscopy",
+          "description": "Concept playlist",
+          "url": "https://www.youtube.com/playlist?list=PLLf6O8XdGj03ktP4MHmIV87pHZHBEUF6f",
+          "available": true
+        },
+        {
+          "id": "chem-notes",
+          "type": "notes",
+          "title": "Chemistry Notes",
+          "description": "Curated notes are being organised",
+          "url": null,
+          "available": false
+        },
+        {
+          "id": "chem-pyq",
+          "type": "pyq",
+          "title": "Chemistry PYQs",
+          "description": "Previous-year papers are coming soon",
+          "url": null,
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "pc",
+      "name": "Professional Communication",
+      "shortName": "PC & Lab",
+      "icon": "message",
+      "accent": "sky",
+      "description": "Communication theory, lab practice and exam-focused material.",
+      "topics": ["Communication", "Language", "Listening", "Presentation"],
+      "resources": [
+        {
+          "id": "pc-lectures",
+          "type": "lecture",
+          "title": "Professional Communication Lectures",
+          "description": "Complete YouTube playlist",
+          "url": "https://www.youtube.com/playlist?list=PL3qvHcrYGy1sihJ6-xK8uHoWTN6W6PK9I",
+          "available": true
+        },
+        {
+          "id": "pc-notes",
+          "type": "notes",
+          "title": "PC Notes",
+          "description": "Curated notes are being organised",
+          "url": null,
+          "available": false
+        },
+        {
+          "id": "pc-pyq",
+          "type": "pyq",
+          "title": "PC Previous-Year Questions",
+          "description": "PYQ collection is coming soon",
+          "url": null,
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "bem",
+      "name": "Basic Engineering Mechanics",
+      "shortName": "BEM & Tutorial",
+      "icon": "gear",
+      "accent": "orange",
+      "description": "Core mechanics concepts, tutorial support and exam practice.",
+      "topics": ["Statics", "Dynamics", "Friction", "Centroid"],
+      "resources": [
+        {
+          "id": "bem-lectures",
+          "type": "lecture",
+          "title": "Engineering Mechanics Lectures",
+          "description": "Full YouTube playlist",
+          "url": "https://www.youtube.com/playlist?list=PLDN15nk5uLiAyM7MbRBF1eIFC8y5vMRxI",
+          "available": true
+        },
+        {
+          "id": "bem-notes",
+          "type": "notes",
+          "title": "BEM Notes",
+          "description": "College Study first-semester notes",
+          "url": "https://college-study.netlify.app/first-semester",
+          "available": true
+        },
+        {
+          "id": "bem-pyq",
+          "type": "pyq",
+          "title": "BEM PYQs",
+          "description": "Previous-year resources on College Study",
+          "url": "https://college-study.netlify.app/first-semester",
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "ees",
+      "name": "Environment & Ecology Studies",
+      "shortName": "EES",
+      "icon": "leaf",
+      "accent": "green",
+      "description": "Environmental foundations, ecology and sustainability concepts.",
+      "topics": ["Ecology", "Pollution", "Resources", "Sustainability"],
+      "resources": [
+        {
+          "id": "ees-pack",
+          "type": "notes",
+          "title": "EES Resource Pack",
+          "description": "The complete pack will be added shortly",
+          "url": null,
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "bet",
+      "name": "Basic Electrical Technology",
+      "shortName": "BET & Tutorial",
+      "icon": "bolt",
+      "accent": "yellow",
+      "description": "Electrical fundamentals, machines and tutorial resources.",
+      "topics": ["Circuits", "AC", "Machines", "Measurements"],
+      "resources": [
+        {
+          "id": "bet-lectures",
+          "type": "lecture",
+          "title": "Basic Electrical Lectures",
+          "description": "Complete YouTube playlist",
+          "url": "https://www.youtube.com/watch?v=Vd2UJiIPbag&list=PL9RcWoqXmzaLTYUdnzKhF4bYug3GjGcEc",
+          "available": true
+        },
+        {
+          "id": "bet-notes",
+          "type": "notes",
+          "title": "BET Notes",
+          "description": "College Study first-semester notes",
+          "url": "https://college-study.netlify.app/first-semester",
+          "available": true
+        },
+        {
+          "id": "bet-pyq",
+          "type": "pyq",
+          "title": "BET PYQs",
+          "description": "Previous-year papers are coming soon",
+          "url": null,
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "workshop",
+      "name": "Central Workshop",
+      "shortName": "Workshop Practice",
+      "icon": "tools",
+      "accent": "rose",
+      "description": "Practical guidance, workshop notes and viva preparation.",
+      "topics": ["Fitting", "Carpentry", "Welding", "Viva"],
+      "resources": [
+        {
+          "id": "workshop-manual",
+          "type": "lecture",
+          "title": "Workshop Manuals",
+          "description": "Practical manuals will be added shortly",
+          "url": null,
+          "available": false
+        },
+        {
+          "id": "workshop-notes",
+          "type": "notes",
+          "title": "Workshop Notes",
+          "description": "College Study first-semester resources",
+          "url": "https://college-study.netlify.app/first-semester",
+          "available": true
+        },
+        {
+          "id": "workshop-pyq",
+          "type": "pyq",
+          "title": "Workshop Viva Questions",
+          "description": "PYQ and viva preparation resources",
+          "url": "https://college-study.netlify.app/first-semester",
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "food-tech",
+      "name": "Food Technology Basics",
+      "shortName": "Food Tech Core",
+      "icon": "wheat",
+      "accent": "teal",
+      "description": "Faculty-led foundation material for first-year Food Technology students.",
+      "topics": ["Food Basics", "Processing", "Quality", "Faculty PDFs"],
+      "resources": [
+        {
+          "id": "food-guidance",
+          "type": "lecture",
+          "title": "Study Guidance",
+          "description": "Use the PDFs supplied by faculty; suitable public lectures are limited",
+          "url": null,
+          "available": false
+        },
+        {
+          "id": "food-notes",
+          "type": "notes",
+          "title": "Food Technology Notes",
+          "description": "Curated notes are being organised",
+          "url": null,
+          "available": false
+        },
+        {
+          "id": "food-pyq",
+          "type": "pyq",
+          "title": "Food Technology PYQs",
+          "description": "Previous-year papers are coming soon",
+          "url": null,
+          "available": false
+        }
+      ]
+    }
+  ]
+}

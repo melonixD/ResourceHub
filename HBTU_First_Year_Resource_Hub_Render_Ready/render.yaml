@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: hbtu-first-year-resource-hub
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true

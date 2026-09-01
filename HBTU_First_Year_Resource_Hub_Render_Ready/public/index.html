@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="HBTU First Year Resource Hub — syllabi, lectures, notes and PYQs in one organised student portal."
+    />
+    <meta name="theme-color" content="#5b5cf0" />
+    <title>First Year Resource Hub · HBTU</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <header class="site-header" id="top">
+      <nav class="nav shell" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="First Year Hub home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" role="img">
+              <path d="M5 10.5 16 5l11 5.5L16 16 5 10.5Z" />
+              <path d="M9 13v6.5c4.8 3.5 9.2 3.5 14 0V13" />
+              <path d="M27 11v8" />
+            </svg>
+          </span>
+          <span><strong>First Year</strong><small>RESOURCE HUB</small></span>
+        </a>
+
+        <div class="desktop-links">
+          <a href="#resources">Resources</a>
+          <a href="#syllabus">Syllabus</a>
+          <a href="#planner">Study desk</a>
+          <a href="#about">About</a>
+        </div>
+
+        <div class="nav-actions">
+          <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch theme">
+            <span class="theme-icon" aria-hidden="true">☾</span>
+          </button>
+          <a class="button button-small button-primary desktop-cta" href="#resources">Explore hub</a>
+          <button class="icon-button menu-button" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span>
+          </button>
+        </div>
+      </nav>
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <a href="#resources">Resources</a>
+        <a href="#syllabus">Syllabus</a>
+        <a href="#planner">Study desk</a>
+        <a href="#about">About</a>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero shell">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span></span> Built by seniors, for juniors</div>
+          <h1>Your first year,<br /><em>beautifully organised.</em></h1>
+          <p>
+            Syllabi, handpicked lectures, notes and previous-year questions—brought together in one calm,
+            searchable space for HBTU students.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#resources">
+              Browse resources
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a class="button button-ghost" href="#planner">
+              Open study desk
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="hero-proof" aria-label="Hub statistics">
+            <div class="avatar-stack" aria-hidden="true"><span>AS</span><span>PD</span><span>+1</span></div>
+            <p><strong id="hero-resource-count">20+ verified links</strong><small>Collected and sorted by your seniors</small></p>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" data-delay="120">
+          <div class="orbit orbit-one" aria-hidden="true"></div>
+          <div class="orbit orbit-two" aria-hidden="true"></div>
+          <div class="float-chip chip-one"><span>⚡</span> BET notes</div>
+          <div class="float-chip chip-two"><span>🧪</span> Chemistry</div>
+          <div class="dashboard-preview">
+            <div class="preview-topbar">
+              <span class="preview-logo">FY</span>
+              <div><strong>Good to see you 👋</strong><small>What will you learn today?</small></div>
+              <span class="preview-avatar">A</span>
+            </div>
+            <div class="preview-search"><span>⌕</span> Search notes, lectures, PYQs...</div>
+            <div class="preview-label">Continue exploring</div>
+            <div class="preview-cards">
+              <div class="preview-card purple">
+                <span class="preview-icon">⚗</span>
+                <p>Chemistry<small>5 lecture series</small></p>
+                <b>↗</b>
+              </div>
+              <div class="preview-card amber">
+                <span class="preview-icon">⚙</span>
+                <p>Mechanics<small>Notes + PYQs</small></p>
+                <b>↗</b>
+              </div>
+            </div>
+            <div class="preview-progress">
+              <div class="progress-head"><span>Weekly progress</span><strong id="preview-progress-value">0%</strong></div>
+              <div class="progress-track"><span id="preview-progress-bar"></span></div>
+              <small>Complete resources to build your streak.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-strip" aria-label="Hub overview">
+        <div class="shell stats-grid">
+          <div><strong>07</strong><span>Subjects covered</span></div>
+          <div><strong id="available-count">—</strong><span>Ready resources</span></div>
+          <div><strong>04</strong><span>Resource types</span></div>
+          <div><strong>₹0</strong><span>Always free</span></div>
+        </div>
+      </section>
+
+      <section class="section shell" id="resources">
+        <div class="section-heading reveal">
+          <div>
+            <span class="section-kicker">RESOURCE LIBRARY</span>
+            <h2>Everything you need,<br />without the endless scrolling.</h2>
+          </div>
+          <p>Search across subjects or filter by the exact material you need. Save useful links and mark resources complete as you go.</p>
+        </div>
+
+        <div class="resource-toolbar reveal">
+          <label class="search-box" for="resource-search">
+            <span aria-hidden="true">⌕</span>
+            <input id="resource-search" type="search" placeholder="Search kinetics, notes, PYQs..." autocomplete="off" />
+            <kbd>⌘ K</kbd>
+          </label>
+          <div class="filter-row" id="type-filters" aria-label="Filter resources by type">
+            <button class="filter-chip active" data-type="all" type="button">All</button>
+            <button class="filter-chip" data-type="lecture" type="button">Lectures</button>
+            <button class="filter-chip" data-type="notes" type="button">Notes</button>
+            <button class="filter-chip" data-type="pyq" type="button">PYQs</button>
+            <button class="filter-chip" data-type="saved" type="button">★ Saved</button>
+          </div>
+        </div>
+
+        <div class="subject-tabs reveal" id="subject-tabs" aria-label="Filter by subject"></div>
+
+        <div class="results-head">
+          <p><strong id="result-count">0 resources</strong><span id="result-context"> across all subjects</span></p>
+          <button class="text-button" type="button" id="clear-filters">Clear filters</button>
+        </div>
+
+        <div class="resource-grid" id="resource-grid" aria-live="polite">
+          <div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div>
+        </div>
+      </section>
+
+      <section class="section syllabus-section" id="syllabus">
+        <div class="shell">
+          <div class="section-heading light reveal">
+            <div>
+              <span class="section-kicker">THE STARTING POINT</span>
+              <h2>Know the syllabus.<br />Study with direction.</h2>
+            </div>
+            <p>Open the official subject syllabus before starting a unit. It keeps your preparation focused and prevents low-value detours.</p>
+          </div>
+          <div class="syllabus-panel reveal">
+            <div class="syllabus-list" id="syllabus-list"></div>
+            <aside class="tip-card">
+              <span class="tip-spark">✦</span>
+              <span class="tip-label">SENIOR'S NOTE</span>
+              <blockquote>“Do not underestimate the PYQs. Solve them properly before every exam—they reveal the pattern better than anything else.”</blockquote>
+              <div class="tip-sign"><span>AS</span><span>PD</span><p>Akshat & Priyanshu<small>Your seniors</small></p></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell study-section" id="planner">
+        <div class="section-heading reveal">
+          <div>
+            <span class="section-kicker">YOUR STUDY DESK</span>
+            <h2>A simple system to<br />turn links into progress.</h2>
+          </div>
+          <p>Your tasks, timer and completed resources stay saved on this device—no account or sign-up required.</p>
+        </div>
+
+        <div class="study-grid">
+          <article class="desk-card planner-card reveal">
+            <div class="card-title-row"><div><span class="mini-label">TODAY</span><h3>My focus list</h3></div><span class="date-pill" id="today-label">Today</span></div>
+            <form class="task-form" id="task-form">
+              <input id="task-input" maxlength="80" placeholder="Add a small, clear task..." aria-label="New study task" required />
+              <button type="submit" aria-label="Add task">+</button>
+            </form>
+            <div class="task-list" id="task-list"></div>
+            <p class="task-empty" id="task-empty">Your focus list is clear. Add one achievable task.</p>
+          </article>
+
+          <article class="desk-card timer-card reveal" data-delay="80">
+            <div class="timer-top"><span class="mini-label">FOCUS TIMER</span><span class="status-dot">Ready</span></div>
+            <div class="timer-ring" id="timer-ring">
+              <div><strong id="timer-value">25:00</strong><span>focus session</span></div>
+            </div>
+            <div class="timer-actions">
+              <button class="button button-primary" id="timer-toggle" type="button">Start focus</button>
+              <button class="icon-button" id="timer-reset" type="button" aria-label="Reset timer">↻</button>
+            </div>
+          </article>
+
+          <article class="desk-card progress-card reveal" data-delay="160">
+            <div class="card-title-row"><div><span class="mini-label">YOUR JOURNEY</span><h3>Resource progress</h3></div><strong id="progress-percent">0%</strong></div>
+            <div class="big-progress"><span id="big-progress-bar"></span></div>
+            <div class="progress-stats">
+              <div><strong id="completed-count">0</strong><span>completed</span></div>
+              <div><strong id="saved-count">0</strong><span>saved</span></div>
+              <div><strong id="remaining-count">0</strong><span>remaining</span></div>
+            </div>
+            <p>Small sessions compound. Pick one useful resource and finish it well.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-section" id="about">
+        <div class="shell about-grid">
+          <div class="about-copy reveal">
+            <span class="section-kicker">WHY THIS EXISTS</span>
+            <h2>Less hunting.<br />More learning.</h2>
+            <p>
+              First year already brings a new campus, new subjects and a different exam pattern. This hub removes one unnecessary problem:
+              figuring out where the good material is.
+            </p>
+            <p>Every link is grouped by subject and purpose, so juniors can move from syllabus to lecture to revision without opening twenty random tabs.</p>
+          </div>
+          <div class="creator-card reveal" data-delay="100">
+            <span class="creator-glow" aria-hidden="true"></span>
+            <div class="creator-top"><span>Made with <b>♥</b> at HBTU</span><span>2026</span></div>
+            <h3>By seniors who remember<br />what first year felt like.</h3>
+            <div class="creator-row">
+              <div><span class="creator-avatar purple-avatar">AS</span><p>Akshat Shukla<small>Co-creator</small></p></div>
+              <div><span class="creator-avatar green-avatar">PD</span><p>Priyanshu Dixit<small>Co-creator</small></p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq-section shell">
+        <div class="faq-intro"><span class="section-kicker">QUICK ANSWERS</span><h2>Before you dive in.</h2></div>
+        <div class="faq-list">
+          <details><summary>Is every resource free?<span>+</span></summary><p>Yes. The hub links to freely accessible syllabi, playlists, notes and study resources.</p></details>
+          <details><summary>Why do some cards say “coming soon”?<span>+</span></summary><p>The original hub does not yet contain a usable link for those items. They are clearly labelled so you never land on a broken page.</p></details>
+          <details><summary>Will my saved items appear on another device?<span>+</span></summary><p>Not yet. Favourites, tasks and progress are stored privately in your current browser and require no account.</p></details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-main">
+        <a class="brand footer-brand" href="#top"><span class="brand-mark">FY</span><span><strong>First Year</strong><small>RESOURCE HUB</small></span></a>
+        <p>One organised place to begin, revise and move forward.</p>
+        <a href="#top" class="back-top">Back to top ↑</a>
+      </div>
+      <div class="shell footer-bottom"><span>Built for HBTU juniors</span><span>Akshat Shukla · Priyanshu Dixit</span></div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
