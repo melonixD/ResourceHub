@@ -1,17 +1,17 @@
 # HBTU First Year Resource Hub
 
-A polished, responsive student portal for first-year syllabi, lectures, notes and previous-year questions. Built with a lightweight Node.js backend and a dependency-free JavaScript frontend so it is easy to upload to GitHub and deploy on Render.
+A calm, Apple-inspired student portal for first-year syllabi, lectures, notes and previous-year questions. Built with a lightweight Node.js backend and a dependency-free JavaScript frontend so it is easy to upload to GitHub and deploy on Render.
 
 ## What is included
 
-- Seven subject areas from the original Notion hub
-- Search by keyword, subject and resource type
-- Unit-wise PYQ vault for Chemistry, Electronics, Mechanics and Professional Communication
+- Premium subject-and-unit file explorer with one focused workspace at a time
+- Minimal system typography, neutral surfaces and responsive light/dark themes
+- Seven subject areas, each organised into five unit folders
+- Search by subject name or unit
+- Lectures, notes, PYQs and recommended-books slots inside every unit
 - 20 separated PDFs that open directly in the browser
 - Syllabus centre with live Google Drive links
 - Clear “coming soon” states instead of broken links
-- Save/favourite resources in the browser
-- Mark resources complete and track progress
 - Personal study-task list stored on the device
 - 25-minute focus timer
 - Light and dark themes

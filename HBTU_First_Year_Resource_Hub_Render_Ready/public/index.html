@@ -7,23 +7,15 @@
       name="description"
       content="HBTU First Year Resource Hub — syllabi, lectures, notes and PYQs in one organised student portal."
     />
-    <meta name="theme-color" content="#5b5cf0" />
+    <meta name="theme-color" content="#f5f5f7" />
     <title>First Year Resource Hub · HBTU</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/apple.css" />
     <script src="/app.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-
-    <div class="ambient ambient-one" aria-hidden="true"></div>
-    <div class="ambient ambient-two" aria-hidden="true"></div>
 
     <header class="site-header" id="top">
       <nav class="nav shell" aria-label="Primary navigation">
@@ -39,8 +31,7 @@
         </a>
 
         <div class="desktop-links">
-          <a href="#resources">Resources</a>
-          <a href="#unit-vault">Unit PYQs</a>
+          <a href="#resources">Library</a>
           <a href="#syllabus">Syllabus</a>
           <a href="#planner">Study desk</a>
           <a href="#about">About</a>
@@ -50,15 +41,13 @@
           <button class="icon-button" id="theme-toggle" type="button" aria-label="Switch theme">
             <span class="theme-icon" aria-hidden="true">☾</span>
           </button>
-          <a class="button button-small button-primary desktop-cta" href="#resources">Explore hub</a>
           <button class="icon-button menu-button" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
             <span></span><span></span>
           </button>
         </div>
       </nav>
       <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-        <a href="#resources">Resources</a>
-        <a href="#unit-vault">Unit PYQs</a>
+        <a href="#resources">Library</a>
         <a href="#syllabus">Syllabus</a>
         <a href="#planner">Study desk</a>
         <a href="#about">About</a>
@@ -66,132 +55,58 @@
     </header>
 
     <main id="main-content">
-      <section class="hero shell">
-        <div class="hero-copy reveal">
-          <div class="eyebrow"><span></span> Built by seniors, for juniors</div>
-          <h1>Your first year,<br /><em>beautifully organised.</em></h1>
-          <p>
-            Syllabi, handpicked lectures, notes and previous-year questions—brought together in one calm,
-            searchable space for HBTU students.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#resources">
-              Browse resources
-              <span aria-hidden="true">↗</span>
-            </a>
-            <a class="button button-ghost" href="#planner">
-              Open study desk
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>
-          <div class="hero-proof" aria-label="Hub statistics">
-            <div class="avatar-stack" aria-hidden="true"><span>AS</span><span>PD</span><span>+1</span></div>
-            <p><strong id="hero-resource-count">20+ verified links</strong><small>Collected and sorted by your seniors</small></p>
-          </div>
-        </div>
-
-        <div class="hero-visual reveal" data-delay="120">
-          <div class="orbit orbit-one" aria-hidden="true"></div>
-          <div class="orbit orbit-two" aria-hidden="true"></div>
-          <div class="float-chip chip-one"><span>⚡</span> BET notes</div>
-          <div class="float-chip chip-two"><span>🧪</span> Chemistry</div>
-          <div class="dashboard-preview">
-            <div class="preview-topbar">
-              <span class="preview-logo">FY</span>
-              <div><strong>Good to see you 👋</strong><small>What will you learn today?</small></div>
-              <span class="preview-avatar">A</span>
-            </div>
-            <div class="preview-search"><span>⌕</span> Search notes, lectures, PYQs...</div>
-            <div class="preview-label">Continue exploring</div>
-            <div class="preview-cards">
-              <div class="preview-card purple">
-                <span class="preview-icon">⚗</span>
-                <p>Chemistry<small>5 lecture series</small></p>
-                <b>↗</b>
-              </div>
-              <div class="preview-card amber">
-                <span class="preview-icon">⚙</span>
-                <p>Mechanics<small>Notes + PYQs</small></p>
-                <b>↗</b>
-              </div>
-            </div>
-            <div class="preview-progress">
-              <div class="progress-head"><span>Weekly progress</span><strong id="preview-progress-value">0%</strong></div>
-              <div class="progress-track"><span id="preview-progress-bar"></span></div>
-              <small>Complete resources to build your streak.</small>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="stats-strip" aria-label="Hub overview">
-        <div class="shell stats-grid">
-          <div><strong>07</strong><span>Subjects covered</span></div>
-          <div><strong id="available-count">—</strong><span>Ready resources</span></div>
-          <div><strong>04</strong><span>Resource types</span></div>
-          <div><strong>₹0</strong><span>Always free</span></div>
+      <section class="intro shell reveal">
+        <span class="intro-kicker">HBTU · FIRST YEAR</span>
+        <h1>Everything you need.<br /><em>Nothing you don’t.</em></h1>
+        <p>Lectures, notes, books and unit-wise PYQs—organised for fast access.</p>
+        <div class="intro-stats" aria-label="Library overview">
+          <span><strong>7</strong> subjects</span>
+          <span><strong>35</strong> unit folders</span>
+          <span><strong id="available-count">20</strong> PYQ PDFs</span>
+          <span id="hero-resource-count" class="sr-only">20 unit PDFs across 7 subjects</span>
         </div>
       </section>
 
       <section class="section shell" id="resources">
         <div class="section-heading reveal">
           <div>
-            <span class="section-kicker">RESOURCE LIBRARY</span>
-            <h2>Everything you need,<br />without the endless scrolling.</h2>
+            <span class="section-kicker">LIBRARY</span>
+            <h2>Choose a subject.</h2>
           </div>
-          <p>Search across subjects or filter by the exact material you need. Save useful links and mark resources complete as you go.</p>
+          <p>Open a unit and continue with the material you need.</p>
         </div>
 
-        <div class="resource-toolbar reveal">
-          <label class="search-box" for="resource-search">
-            <span aria-hidden="true">⌕</span>
-            <input id="resource-search" type="search" placeholder="Search kinetics, notes, PYQs..." autocomplete="off" />
-            <kbd>⌘ K</kbd>
-          </label>
-          <div class="filter-row" id="type-filters" aria-label="Filter resources by type">
-            <button class="filter-chip active" data-type="all" type="button">All</button>
-            <button class="filter-chip" data-type="lecture" type="button">Lectures</button>
-            <button class="filter-chip" data-type="notes" type="button">Notes</button>
-            <button class="filter-chip" data-type="pyq" type="button">PYQs</button>
-            <button class="filter-chip" data-type="book" type="button">Books</button>
-            <button class="filter-chip" data-type="saved" type="button">★ Saved</button>
-          </div>
-        </div>
-
-        <div class="subject-tabs reveal" id="subject-tabs" aria-label="Filter by subject"></div>
-
-        <div class="results-head">
-          <p><strong id="result-count">0 resources</strong><span id="result-context"> across all subjects</span></p>
-          <button class="text-button" type="button" id="clear-filters">Clear filters</button>
-        </div>
-
-        <div class="resource-grid" id="resource-grid" aria-live="polite">
-          <div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div>
-        </div>
-      </section>
-
-      <section class="section unit-vault-section" id="unit-vault">
-        <div class="shell">
-          <div class="section-heading reveal">
-            <div>
-              <span class="section-kicker">UNIT-WISE LEARNING</span>
-              <h2>One subject. Five units.<br />Zero mixed-up PDFs.</h2>
+        <div class="library-explorer reveal">
+          <aside class="library-sidebar">
+            <div class="library-sidebar-head">
+              <span class="library-label">SUBJECTS</span>
+              <span id="library-subject-count">7</span>
             </div>
-            <p>Open only the unit you are studying. Each unit keeps lectures, notes, PYQs and recommended books together in one focused folder.</p>
-          </div>
+            <label class="library-search" for="library-search">
+              <span aria-hidden="true">⌕</span>
+              <input id="library-search" type="search" placeholder="Search subject or unit" autocomplete="off" />
+              <kbd>⌘ K</kbd>
+            </label>
+            <nav class="library-subject-list" id="library-subject-list" aria-label="Choose a subject"></nav>
+          </aside>
 
-          <div class="unit-subject-tabs reveal" id="unit-subject-tabs" aria-label="Select a subject for unit-wise resources"></div>
-
-          <div class="unit-course-panel reveal">
-            <div class="unit-course-header">
-              <div>
-                <span class="section-kicker">SELECTED SUBJECT</span>
-                <h3 id="unit-course-name">Engineering Chemistry</h3>
-                <p id="unit-course-description"></p>
+          <div class="library-main">
+            <div class="library-breadcrumb"><span>Library</span><b>/</b><strong id="library-breadcrumb">Engineering Chemistry</strong></div>
+            <div class="library-course-header">
+              <div class="library-course-identity">
+                <span class="course-icon" id="library-course-icon" aria-hidden="true">🧪</span>
+                <div>
+                  <span class="library-label">SELECTED SUBJECT</span>
+                  <h3 id="library-course-name">Engineering Chemistry</h3>
+                  <p id="library-course-description"></p>
+                </div>
               </div>
-              <span class="pdf-ready-badge"><b>20</b> unit PDFs ready</span>
+              <span class="course-status" id="library-course-status">5 unit folders</span>
             </div>
-            <div class="unit-list" id="unit-list" aria-live="polite"></div>
+            <div class="library-column-head" aria-hidden="true"><span>UNITS</span><span>RESOURCES</span></div>
+            <div class="unit-list" id="library-unit-list" aria-live="polite">
+              <div class="library-loading"></div><div class="library-loading"></div><div class="library-loading"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -223,7 +138,7 @@
             <span class="section-kicker">YOUR STUDY DESK</span>
             <h2>A simple system to<br />turn links into progress.</h2>
           </div>
-          <p>Your tasks, timer and completed resources stay saved on this device—no account or sign-up required.</p>
+          <p>Keep today’s plan small, use the focus timer, and jump back into the library without creating an account.</p>
         </div>
 
         <div class="study-grid">
@@ -249,14 +164,14 @@
           </article>
 
           <article class="desk-card progress-card reveal" data-delay="160">
-            <div class="card-title-row"><div><span class="mini-label">YOUR JOURNEY</span><h3>Resource progress</h3></div><strong id="progress-percent">0%</strong></div>
-            <div class="big-progress"><span id="big-progress-bar"></span></div>
+            <div class="card-title-row"><div><span class="mini-label">YOUR LIBRARY</span><h3>Resource snapshot</h3></div><strong id="snapshot-pdf-badge">20 PDFs</strong></div>
+            <div class="big-progress"><span id="library-coverage-bar"></span></div>
             <div class="progress-stats">
-              <div><strong id="completed-count">0</strong><span>completed</span></div>
-              <div><strong id="saved-count">0</strong><span>saved</span></div>
-              <div><strong id="remaining-count">0</strong><span>remaining</span></div>
+              <div><strong id="snapshot-subjects">7</strong><span>subjects</span></div>
+              <div><strong id="snapshot-units">35</strong><span>unit folders</span></div>
+              <div><strong id="snapshot-pdfs">20</strong><span>PYQ PDFs</span></div>
             </div>
-            <p>Small sessions compound. Pick one useful resource and finish it well.</p>
+            <p>The structure is ready. New notes, lectures and books can now be added inside the exact unit where they belong.</p>
           </article>
         </div>
       </section>
@@ -289,7 +204,7 @@
         <div class="faq-list">
           <details><summary>Is every resource free?<span>+</span></summary><p>Yes. The hub links to freely accessible syllabi, playlists, notes and study resources.</p></details>
           <details><summary>Why do some cards say “coming soon”?<span>+</span></summary><p>The original hub does not yet contain a usable link for those items. They are clearly labelled so you never land on a broken page.</p></details>
-          <details><summary>Will my saved items appear on another device?<span>+</span></summary><p>Not yet. Favourites, tasks and progress are stored privately in your current browser and require no account.</p></details>
+          <details><summary>Will my study tasks appear on another device?<span>+</span></summary><p>Not yet. Your focus list is stored privately in the current browser, so it works without an account.</p></details>
         </div>
       </section>
     </main>

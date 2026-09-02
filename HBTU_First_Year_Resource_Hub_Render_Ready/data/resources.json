@@ -49,7 +49,7 @@
     },
     {
       "id": "bet",
-      "name": "Basic Electronics",
+      "name": "Basic Electronics Engineering",
       "description": "Unit-wise Electronics questions from semiconductor devices to electronic instruments.",
       "accent": "yellow",
       "lectureUrl": "https://www.youtube.com/watch?v=7jaa1rlW7Ak&list=PLBlnK6fEyqRiw-GZRqfnlVIBz9dxrqHJS",
@@ -91,12 +91,57 @@
         { "number": 4, "title": "Presentation Strategies", "pyqUrl": "/resources/pyqs/professional-communication/Professional_Communication_Unit_4_PYQs.pdf" },
         { "number": 5, "title": "Value-based Text Reading", "pyqUrl": "/resources/pyqs/professional-communication/Professional_Communication_Unit_5_PYQs.pdf" }
       ]
+    },
+    {
+      "id": "ees",
+      "name": "Environment & Ecology Studies",
+      "description": "A clean five-unit workspace ready for lectures, notes, PYQs and books as they are collected.",
+      "accent": "green",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "workshop",
+      "name": "Central Workshop Practice",
+      "description": "Five unit folders for practical material, workshop notes, viva questions and recommended books.",
+      "accent": "rose",
+      "lectureUrl": null,
+      "notesUrl": "https://college-study.netlify.app/first-semester",
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "food-tech",
+      "name": "Food Technology Core",
+      "description": "A dedicated five-unit home for faculty material, notes, exam papers and future book PDFs.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
     }
   ],
   "syllabi": [
     {
       "id": "chemistry",
-      "title": "Chemistry",
+      "title": "Engineering Chemistry",
       "available": true,
       "url": "https://drive.google.com/file/d/1J7KJZJ98T7iXVrsuY_yDD4bQ1dQECuN7/view?usp=drive_link"
     },
@@ -108,7 +153,7 @@
     },
     {
       "id": "bem",
-      "title": "Basic Engineering Mechanics",
+      "title": "Engineering Mechanics",
       "available": true,
       "url": "https://drive.google.com/file/d/1PHUIs7BGmtP0LSbmdfCRfIvOLSDMzrPy/view?usp=drive_link"
     },
@@ -120,7 +165,7 @@
     },
     {
       "id": "bet",
-      "title": "Basic Electronics",
+      "title": "Basic Electronics Engineering",
       "available": true,
       "url": "https://drive.google.com/file/d/1Vzy7SGv8fbdiv-O0uBeokwdqtfcRzkGb/view?usp=drive_link"
     },
@@ -140,8 +185,8 @@
   "subjects": [
     {
       "id": "chemistry",
-      "name": "Chemistry",
-      "shortName": "Chemistry",
+      "name": "Engineering Chemistry",
+      "shortName": "Engineering Chemistry",
       "icon": "flask",
       "accent": "violet",
       "description": "Theory and laboratory foundations, from kinetics to spectroscopy.",
@@ -200,7 +245,7 @@
           "type": "pyq",
           "title": "Chemistry Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#unit-vault",
+          "url": "#resources",
           "available": true
         },
         {
@@ -243,7 +288,7 @@
           "type": "pyq",
           "title": "PC Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#unit-vault",
+          "url": "#resources",
           "available": true
         },
         {
@@ -258,8 +303,8 @@
     },
     {
       "id": "bem",
-      "name": "Basic Engineering Mechanics",
-      "shortName": "BEM & Tutorial",
+      "name": "Engineering Mechanics",
+      "shortName": "Engineering Mechanics",
       "icon": "gear",
       "accent": "orange",
       "description": "Core mechanics concepts, tutorial support and exam practice.",
@@ -286,7 +331,7 @@
           "type": "pyq",
           "title": "Mechanics Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#unit-vault",
+          "url": "#resources",
           "available": true
         },
         {
@@ -328,8 +373,8 @@
     },
     {
       "id": "bet",
-      "name": "Basic Electronics",
-      "shortName": "BET & Tutorial",
+      "name": "Basic Electronics Engineering",
+      "shortName": "Basic Electronics",
       "icon": "bolt",
       "accent": "yellow",
       "description": "Electronic devices, circuits and tutorial resources.",
@@ -356,7 +401,7 @@
           "type": "pyq",
           "title": "Electronics Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#unit-vault",
+          "url": "#resources",
           "available": true
         },
         {

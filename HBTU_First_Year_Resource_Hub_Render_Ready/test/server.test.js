@@ -49,11 +49,26 @@ test("every subject includes a recommended books section", async () => {
   assert.ok(data.subjects.every((subject) => subject.resources[0].type === "book"));
 });
 
-test("unit vault exposes four subjects and twenty unit PDFs", async () => {
+test("academic library exposes seven subjects and thirty-five unit folders", async () => {
   const response = await fetch(`${baseUrl}/api/resources`);
   const data = await response.json();
-  assert.equal(data.unitCollections.length, 4);
-  assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 20);
+  assert.equal(data.unitCollections.length, 7);
+  assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 35);
+  assert.equal(
+    data.unitCollections.reduce((total, subject) => total + subject.units.filter((unit) => unit.pyqUrl).length, 0),
+    20
+  );
+});
+
+test("every library subject has lectures, notes, PYQs and books slots", async () => {
+  const response = await fetch(`${baseUrl}/`);
+  const html = await response.text();
+  const script = await (await fetch(`${baseUrl}/app.js`)).text();
+  assert.match(html, /Choose a subject/i);
+  assert.match(script, /title: "Lectures"/);
+  assert.match(script, /title: "Notes"/);
+  assert.match(script, /title: "PYQs"/);
+  assert.match(script, /title: "Books"/);
 });
 
 test("unit PDF opens inline from the website", async () => {
@@ -67,5 +82,5 @@ test("spa fallback serves the website", async () => {
   const response = await fetch(`${baseUrl}/any-page`);
   const html = await response.text();
   assert.equal(response.status, 200);
-  assert.match(html, /Your first year/);
+  assert.match(html, /Everything you need/);
 });
