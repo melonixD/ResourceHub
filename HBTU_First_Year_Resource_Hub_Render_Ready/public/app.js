@@ -5,6 +5,7 @@ const STORAGE = {
 
 const state = {
   data: null,
+  branch: "mechanical",
   librarySubject: "chemistry",
   query: "",
   tasks: readStorage(STORAGE.tasks, []),
@@ -49,9 +50,10 @@ function escapeHtml(value) {
 
 function cacheElements() {
   [
-    "theme-toggle", "menu-toggle", "mobile-menu", "library-search", "library-subject-count",
-    "library-subject-list", "library-breadcrumb", "library-course-icon", "library-course-name",
-    "library-course-description", "library-course-status", "library-unit-list", "syllabus-list",
+    "theme-toggle", "menu-toggle", "mobile-menu", "branch-search", "library-branch-count",
+    "library-branch-list", "library-branch-breadcrumb", "library-subject-breadcrumb",
+    "library-branch-name", "library-branch-status", "branch-subject-list", "library-course-icon",
+    "library-course-name", "library-course-description", "library-course-status", "library-unit-list", "syllabus-list",
     "available-count", "hero-resource-count",
     "snapshot-pdf-badge", "library-coverage-bar", "snapshot-subjects", "snapshot-units",
     "snapshot-pdfs", "task-form", "task-input", "task-list", "task-empty", "today-label",
@@ -151,35 +153,36 @@ function bindGlobalShortcuts() {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
       document.getElementById("resources").scrollIntoView({ behavior: "smooth" });
-      window.setTimeout(() => elements["library-search"].focus(), 420);
+      window.setTimeout(() => elements["branch-search"].focus(), 420);
     }
     if (event.key === "Escape") {
-      elements["library-search"].blur();
+      elements["branch-search"].blur();
       closeMobileMenu();
     }
   });
 }
 
 function bindLibraryControls() {
-  elements["library-search"].addEventListener("input", (event) => {
+  elements["branch-search"].addEventListener("input", (event) => {
     state.query = event.target.value.trim().toLowerCase();
     renderLibrary();
   });
 
-  elements["library-subject-list"].addEventListener("click", (event) => {
-    const button = event.target.closest("[data-library-subject]");
+  elements["library-branch-list"].addEventListener("click", (event) => {
+    const button = event.target.closest("[data-library-branch]");
     if (!button) return;
-    state.librarySubject = button.dataset.librarySubject;
+    state.branch = button.dataset.libraryBranch;
+    const branch = state.data.branches.find((item) => item.id === state.branch);
+    if (!branch.subjectIds.includes(state.librarySubject)) state.librarySubject = branch.subjectIds[0];
     renderLibrary();
   });
-}
 
-function collectionMatches(collection, query) {
-  if (!query) return true;
-  const subjectText = `${collection.name} ${collection.description}`.toLowerCase();
-  return subjectText.includes(query) || collection.units.some((unit) =>
-    `unit ${unit.number} ${unit.title}`.toLowerCase().includes(query)
-  );
+  elements["branch-subject-list"].addEventListener("click", (event) => {
+    const button = event.target.closest("[data-branch-subject]");
+    if (!button) return;
+    state.librarySubject = button.dataset.branchSubject;
+    renderLibrary();
+  });
 }
 
 function countCollectionPdfs(collection) {
@@ -187,39 +190,49 @@ function countCollectionPdfs(collection) {
 }
 
 function renderLibrary() {
+  const branches = state.data?.branches || [];
   const collections = state.data?.unitCollections || [];
-  const visibleCollections = collections.filter((collection) => collectionMatches(collection, state.query));
-  elements["library-subject-count"].textContent = String(visibleCollections.length).padStart(2, "0");
+  const visibleBranches = branches.filter((branch) => !state.query || `${branch.name} ${branch.code}`.toLowerCase().includes(state.query));
+  elements["library-branch-count"].textContent = String(visibleBranches.length).padStart(2, "0");
 
-  if (!visibleCollections.length) {
-    elements["library-subject-list"].innerHTML = `<div class="subject-empty">No matching subject</div>`;
+  if (!visibleBranches.length) {
+    elements["library-branch-list"].innerHTML = `<div class="subject-empty">No matching branch</div>`;
     elements["library-unit-list"].innerHTML = `
-      <div class="empty-state"><span>⌕</span><h3>No matching folders</h3>
-      <p>Try “chemistry”, “electronics” or “unit 1”.</p></div>`;
+      <div class="empty-state"><span>⌕</span><h3>No matching branch</h3>
+      <p>Try “Mechanical”, “Electrical” or “Food Technology”.</p></div>`;
     return;
   }
 
-  if (!visibleCollections.some((collection) => collection.id === state.librarySubject)) {
-    state.librarySubject = visibleCollections[0].id;
+  if (!visibleBranches.some((branch) => branch.id === state.branch)) {
+    state.branch = visibleBranches[0].id;
   }
-  const selected = visibleCollections.find((collection) => collection.id === state.librarySubject);
+  const selectedBranch = branches.find((branch) => branch.id === state.branch);
+  const branchCollections = selectedBranch.subjectIds
+    .map((subjectId) => collections.find((collection) => collection.id === subjectId))
+    .filter(Boolean);
+  if (!branchCollections.some((collection) => collection.id === state.librarySubject)) {
+    state.librarySubject = branchCollections[0].id;
+  }
+  const selected = branchCollections.find((collection) => collection.id === state.librarySubject);
 
-  elements["library-subject-list"].innerHTML = visibleCollections.map((collection) => {
-    const pdfCount = countCollectionPdfs(collection);
+  elements["library-branch-list"].innerHTML = visibleBranches.map((branch) => {
     return `
-      <button class="library-subject ${collection.id === selected.id ? "active" : ""}" data-library-subject="${collection.id}" type="button">
-        <span class="library-subject-icon" aria-hidden="true">${subjectEmoji[collection.id] || "•"}</span>
-        <span class="library-subject-copy"><strong>${escapeHtml(collection.name)}</strong><small>${collection.units.length} units · ${pdfCount ? `${pdfCount} PYQs ready` : "folders ready"}</small></span>
+      <button class="library-subject ${branch.id === selectedBranch.id ? "active" : ""}" data-library-branch="${branch.id}" type="button">
+        <span class="library-subject-icon branch-code" aria-hidden="true">${escapeHtml(branch.code)}</span>
+        <span class="library-subject-copy"><strong>${escapeHtml(branch.name)}</strong><small>${branch.subjectIds.length} first-year subjects</small></span>
         <span class="library-subject-arrow" aria-hidden="true">›</span>
       </button>`;
   }).join("");
 
-  const subjectMatchesQuery = `${selected.name} ${selected.description}`.toLowerCase().includes(state.query);
-  const visibleUnits = state.query && !subjectMatchesQuery
-    ? selected.units.filter((unit) => `unit ${unit.number} ${unit.title}`.toLowerCase().includes(state.query))
-    : selected.units;
-
-  elements["library-breadcrumb"].textContent = selected.name;
+  elements["library-branch-breadcrumb"].textContent = selectedBranch.name;
+  elements["library-subject-breadcrumb"].textContent = selected.name;
+  elements["library-branch-name"].textContent = selectedBranch.name;
+  elements["library-branch-status"].textContent = `${branchCollections.length} subjects`;
+  elements["branch-subject-list"].innerHTML = branchCollections.map((collection) => `
+    <button class="branch-subject ${collection.id === selected.id ? "active" : ""}" data-branch-subject="${collection.id}" type="button">
+      <span aria-hidden="true">${subjectEmoji[collection.id] || "•"}</span>${escapeHtml(collection.name)}
+    </button>
+  `).join("");
   elements["library-course-icon"].textContent = subjectEmoji[selected.id] || "•";
   elements["library-course-name"].textContent = selected.name;
   elements["library-course-description"].textContent = selected.description;
@@ -228,7 +241,7 @@ function renderLibrary() {
     ? `${selected.units.length} units · ${pdfCount} PDFs ready`
     : `${selected.units.length} unit folders ready`;
   elements["library-unit-list"].dataset.accent = selected.accent;
-  elements["library-unit-list"].innerHTML = visibleUnits.map((unit, index) => renderUnit(selected, unit, index)).join("");
+  elements["library-unit-list"].innerHTML = selected.units.map((unit, index) => renderUnit(selected, unit, index)).join("");
 
   elements["library-unit-list"].querySelectorAll("details").forEach((details) => {
     details.addEventListener("toggle", () => {

@@ -33,6 +33,15 @@ test("resource endpoint returns seven subjects", async () => {
   assert.equal(data.subjects.length, 7);
 });
 
+test("resource library starts with all thirteen HBTU branches", async () => {
+  const response = await fetch(`${baseUrl}/api/resources`);
+  const data = await response.json();
+  assert.equal(data.branches.length, 13);
+  assert.ok(data.branches.some((branch) => branch.name === "Mechanical Engineering"));
+  assert.ok(data.branches.some((branch) => branch.name === "Electrical Engineering"));
+  assert.ok(data.branches.every((branch) => branch.subjectIds.length >= 6));
+});
+
 test("resource filters narrow results", async () => {
   const response = await fetch(`${baseUrl}/api/resources?subject=chemistry&type=lecture&q=spectroscopy`);
   const data = await response.json();
@@ -60,11 +69,13 @@ test("academic library exposes seven subjects and thirty-five unit folders", asy
   );
 });
 
-test("every library subject has lectures, notes, PYQs and books slots", async () => {
+test("branch-first library keeps lectures, notes, PYQs and books inside units", async () => {
   const response = await fetch(`${baseUrl}/`);
   const html = await response.text();
   const script = await (await fetch(`${baseUrl}/app.js`)).text();
-  assert.match(html, /Choose a subject/i);
+  assert.match(html, /Choose your branch/i);
+  assert.doesNotMatch(html, /30 resources across all subjects/i);
+  assert.match(script, /data-library-branch/);
   assert.match(script, /title: "Lectures"/);
   assert.match(script, /title: "Notes"/);
   assert.match(script, /title: "PYQs"/);

@@ -4,7 +4,8 @@ A calm, Apple-inspired student portal for first-year syllabi, lectures, notes an
 
 ## What is included
 
-- Premium subject-and-unit file explorer with one focused workspace at a time
+- Branch-first explorer: branch → subject → unit → resource
+- All 13 current HBTU B.Tech branches, including Mechanical and Electrical Engineering
 - Minimal system typography, neutral surfaces and responsive light/dark themes
 - Seven subject areas, each organised into five unit folders
 - Search by subject name or unit

@@ -60,7 +60,7 @@
         <h1>Everything you need.<br /><em>Nothing you don’t.</em></h1>
         <p>Lectures, notes, books and unit-wise PYQs—organised for fast access.</p>
         <div class="intro-stats" aria-label="Library overview">
-          <span><strong>7</strong> subjects</span>
+          <span><strong>13</strong> branches</span>
           <span><strong>35</strong> unit folders</span>
           <span><strong id="available-count">20</strong> PYQ PDFs</span>
           <span id="hero-resource-count" class="sr-only">20 unit PDFs across 7 subjects</span>
@@ -70,38 +70,49 @@
       <section class="section shell" id="resources">
         <div class="section-heading reveal">
           <div>
-            <span class="section-kicker">LIBRARY</span>
-            <h2>Choose a subject.</h2>
+            <span class="section-kicker">RESOURCE LIBRARY</span>
+            <h2>Choose your branch.</h2>
           </div>
-          <p>Open a unit and continue with the material you need.</p>
+          <p>Then choose a subject, open a unit and continue with the material you need.</p>
         </div>
 
         <div class="library-explorer reveal">
           <aside class="library-sidebar">
             <div class="library-sidebar-head">
-              <span class="library-label">SUBJECTS</span>
-              <span id="library-subject-count">7</span>
+              <span class="library-label">BRANCHES</span>
+              <span id="library-branch-count">13</span>
             </div>
-            <label class="library-search" for="library-search">
+            <label class="library-search" for="branch-search">
               <span aria-hidden="true">⌕</span>
-              <input id="library-search" type="search" placeholder="Search subject or unit" autocomplete="off" />
+              <input id="branch-search" type="search" placeholder="Find your branch" autocomplete="off" />
               <kbd>⌘ K</kbd>
             </label>
-            <nav class="library-subject-list" id="library-subject-list" aria-label="Choose a subject"></nav>
+            <nav class="library-subject-list" id="library-branch-list" aria-label="Choose a branch"></nav>
           </aside>
 
           <div class="library-main">
-            <div class="library-breadcrumb"><span>Library</span><b>/</b><strong id="library-breadcrumb">Engineering Chemistry</strong></div>
-            <div class="library-course-header">
-              <div class="library-course-identity">
-                <span class="course-icon" id="library-course-icon" aria-hidden="true">🧪</span>
-                <div>
-                  <span class="library-label">SELECTED SUBJECT</span>
-                  <h3 id="library-course-name">Engineering Chemistry</h3>
-                  <p id="library-course-description"></p>
-                </div>
+            <div class="library-breadcrumb">
+              <span>Resources</span><b>/</b><strong id="library-branch-breadcrumb">Mechanical Engineering</strong><b>/</b><span id="library-subject-breadcrumb">Engineering Chemistry</span>
+            </div>
+            <div class="branch-header">
+              <div>
+                <span class="library-label">SELECTED BRANCH</span>
+                <h3 id="library-branch-name">Mechanical Engineering</h3>
+                <p>First-year lectures, notes, PYQs and books.</p>
               </div>
-              <span class="course-status" id="library-course-status">5 unit folders</span>
+              <span class="course-status" id="library-branch-status">6 subjects</span>
+            </div>
+            <div class="branch-subjects">
+              <span class="library-label">SUBJECTS</span>
+              <div class="branch-subject-list" id="branch-subject-list" aria-label="Choose a subject"></div>
+            </div>
+            <div class="selected-subject">
+              <span class="course-icon" id="library-course-icon" aria-hidden="true">🧪</span>
+              <div>
+                <h4 id="library-course-name">Engineering Chemistry</h4>
+                <p id="library-course-description"></p>
+              </div>
+              <span class="course-status" id="library-course-status">5 units · 5 PDFs ready</span>
             </div>
             <div class="library-column-head" aria-hidden="true"><span>UNITS</span><span>RESOURCES</span></div>
             <div class="unit-list" id="library-unit-list" aria-live="polite">

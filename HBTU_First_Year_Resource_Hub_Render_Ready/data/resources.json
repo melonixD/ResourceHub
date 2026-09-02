@@ -6,6 +6,21 @@
     "creators": ["Akshat Shukla", "Priyanshu Dixit"],
     "lastUpdated": "2026-09-02"
   },
+  "branches": [
+    { "id": "civil", "code": "CE", "name": "Civil Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "cse", "code": "CSE", "name": "Computer Science & Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "electrical", "code": "EE", "name": "Electrical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "electronics", "code": "EN", "name": "Electronics Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "information-technology", "code": "IT", "name": "Information Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "mechanical", "code": "ME", "name": "Mechanical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "biochemical", "code": "BE", "name": "Biochemical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "chemical", "code": "CH", "name": "Chemical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "food-technology", "code": "FT", "name": "Food Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "food-tech"] },
+    { "id": "leather", "code": "LT", "name": "Leather Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "oil", "code": "OT", "name": "Oil Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "paint", "code": "PT", "name": "Paint Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "plastic", "code": "PL", "name": "Plastic Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] }
+  ],
   "unitCollections": [
     {
       "id": "chemistry",
