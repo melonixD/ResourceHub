@@ -6,6 +6,8 @@ A polished, responsive student portal for first-year syllabi, lectures, notes an
 
 - Seven subject areas from the original Notion hub
 - Search by keyword, subject and resource type
+- Unit-wise PYQ vault for Chemistry, Electronics, Mechanics and Professional Communication
+- 20 separated PDFs that open directly in the browser
 - Syllabus centre with live Google Drive links
 - Clear “coming soon” states instead of broken links
 - Save/favourite resources in the browser
@@ -73,7 +75,7 @@ All subject, syllabus and link content lives in `data/resources.json`. Keep this
 }
 ```
 
-Supported types are `lecture`, `notes` and `pyq`. For an upcoming resource, use `null` for the URL and set `available` to `false`.
+Supported types are `lecture`, `notes`, `pyq` and `book`. For an upcoming resource, use `null` for the URL and set `available` to `false`.
 
 ## Project structure
 
@@ -85,6 +87,7 @@ first-year-resource-hub/
 │   ├── app.js
 │   ├── favicon.svg
 │   ├── index.html
+│   ├── resources/pyqs/        # Browser-viewable unit PDFs
 │   └── styles.css
 ├── test/
 │   └── server.test.js

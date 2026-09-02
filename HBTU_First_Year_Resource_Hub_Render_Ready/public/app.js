@@ -10,6 +10,7 @@ const state = {
   subject: "all",
   type: "all",
   query: "",
+  unitSubject: "chemistry",
   saved: new Set(readStorage(STORAGE.saved, [])),
   completed: new Set(readStorage(STORAGE.completed, [])),
   tasks: readStorage(STORAGE.tasks, []),
@@ -30,6 +31,7 @@ const typeMeta = {
   lecture: { label: "Lecture", icon: "▶" },
   notes: { label: "Notes", icon: "≡" },
   pyq: { label: "PYQ", icon: "✓" },
+  book: { label: "Recommended Book", icon: "▤" },
 };
 
 const elements = {};
@@ -67,6 +69,7 @@ function cacheElements() {
     "preview-progress-bar", "progress-percent", "big-progress-bar", "completed-count",
     "saved-count", "remaining-count", "task-form", "task-input", "task-list", "task-empty",
     "today-label", "timer-value", "timer-toggle", "timer-reset", "timer-ring", "toast",
+    "unit-subject-tabs", "unit-course-name", "unit-course-description", "unit-list",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
 }
 
@@ -86,7 +89,9 @@ async function initialise() {
     renderSubjectTabs();
     renderSyllabi();
     renderResources();
+    renderUnitVault();
     bindResourceControls();
+    bindUnitVaultControls();
     updateDashboardStats();
   } catch (error) {
     console.error(error);
@@ -222,8 +227,13 @@ function bindResourceControls() {
   elements["resource-grid"].addEventListener("click", (event) => {
     const saveButton = event.target.closest("[data-save]");
     const completeButton = event.target.closest("[data-complete]");
+    const unitLink = event.target.closest("[data-unit-subject]");
     if (saveButton) toggleSaved(saveButton.dataset.save);
     if (completeButton) toggleCompleted(completeButton.dataset.complete);
+    if (unitLink) {
+      state.unitSubject = unitLink.dataset.unitSubject;
+      renderUnitVault();
+    }
   });
 }
 
@@ -268,6 +278,10 @@ function renderResources() {
     const meta = typeMeta[resource.type] || { label: resource.type, icon: "•" };
     const isSaved = state.saved.has(resource.id);
     const isComplete = state.completed.has(resource.id);
+    const isInternal = resource.url?.startsWith("#");
+    const openAttributes = isInternal
+      ? `data-unit-subject="${resource.subjectId}"`
+      : `target="_blank" rel="noopener noreferrer"`;
     return `
       <article class="resource-card ${isComplete ? "completed" : ""}" data-accent="${resource.accent}">
         <div class="resource-top">
@@ -282,11 +296,91 @@ function renderResources() {
           <div class="resource-actions">
             ${resource.available ? `
               <button class="complete-button ${isComplete ? "is-complete" : ""}" type="button" data-complete="${resource.id}" aria-label="${isComplete ? "Mark incomplete" : "Mark complete"}" aria-pressed="${isComplete}">✓</button>
-              <a class="open-link" href="${escapeHtml(resource.url)}" target="_blank" rel="noopener noreferrer">Open <span aria-hidden="true">↗</span></a>
+              <a class="open-link" href="${escapeHtml(resource.url)}" ${openAttributes}>Open <span aria-hidden="true">↗</span></a>
             ` : `<span class="coming-soon">Coming soon</span>`}
           </div>
         </div>
       </article>`;
+  }).join("");
+}
+
+function bindUnitVaultControls() {
+  elements["unit-subject-tabs"].addEventListener("click", (event) => {
+    const button = event.target.closest("[data-unit-course]");
+    if (!button) return;
+    state.unitSubject = button.dataset.unitCourse;
+    renderUnitVault();
+  });
+}
+
+function renderUnitVault() {
+  const collections = state.data?.unitCollections || [];
+  if (!collections.length) return;
+  const selected = collections.find((collection) => collection.id === state.unitSubject) || collections[0];
+  state.unitSubject = selected.id;
+
+  elements["unit-subject-tabs"].innerHTML = collections.map((collection) => `
+    <button class="unit-subject-tab ${collection.id === selected.id ? "active" : ""}" data-unit-course="${collection.id}" type="button">
+      <span aria-hidden="true">${subjectEmoji[collection.id] || "•"}</span>
+      <span>${escapeHtml(collection.name)}<small>5 units · PYQs ready</small></span>
+    </button>
+  `).join("");
+
+  elements["unit-course-name"].textContent = selected.name;
+  elements["unit-course-description"].textContent = selected.description;
+  elements["unit-list"].dataset.accent = selected.accent;
+  elements["unit-list"].innerHTML = selected.units.map((unit, index) => {
+    const materials = [
+      {
+        icon: "▶",
+        title: "Lectures",
+        description: unit.lectureUrl || selected.lectureUrl ? "Open the topic playlist" : "Topic playlist coming soon",
+        url: unit.lectureUrl || selected.lectureUrl,
+      },
+      {
+        icon: "≡",
+        title: "Notes",
+        description: selected.notesUrl ? "Open the notes collection" : "Unit notes coming soon",
+        url: selected.notesUrl,
+      },
+      {
+        icon: "✓",
+        title: "PYQs",
+        description: `View only Unit ${unit.number} questions`,
+        url: unit.pyqUrl,
+        featured: true,
+      },
+      {
+        icon: "▤",
+        title: "Recommended Books",
+        description: "Book PDFs will be added soon",
+        url: null,
+      },
+    ];
+
+    return `
+      <details class="unit-card" ${index === 0 ? "open" : ""}>
+        <summary>
+          <span class="unit-number">${String(unit.number).padStart(2, "0")}</span>
+          <span class="unit-summary-copy"><strong>Unit ${unit.number}</strong><small>${escapeHtml(unit.title)}</small></span>
+          <span class="unit-ready"><b>PYQ ready</b><i>+</i></span>
+        </summary>
+        <div class="unit-material-grid">
+          ${materials.map((material) => material.url ? `
+            <a class="unit-material ${material.featured ? "featured" : ""}" href="${escapeHtml(material.url)}" target="_blank" rel="noopener noreferrer">
+              <span class="unit-material-icon" aria-hidden="true">${material.icon}</span>
+              <span><strong>${escapeHtml(material.title)}</strong><small>${escapeHtml(material.description)}</small></span>
+              <b class="unit-material-action">${material.featured ? "View PDF" : "Open"} ↗</b>
+            </a>
+          ` : `
+            <div class="unit-material disabled">
+              <span class="unit-material-icon" aria-hidden="true">${material.icon}</span>
+              <span><strong>${escapeHtml(material.title)}</strong><small>${escapeHtml(material.description)}</small></span>
+              <b class="unit-material-action">Soon</b>
+            </div>
+          `).join("")}
+        </div>
+      </details>`;
   }).join("");
 }
 

@@ -4,8 +4,95 @@
     "institution": "HBTU",
     "description": "One organised place for first-year syllabi, lectures, notes and previous-year questions.",
     "creators": ["Akshat Shukla", "Priyanshu Dixit"],
-    "lastUpdated": "2026-09-01"
+    "lastUpdated": "2026-09-02"
   },
+  "unitCollections": [
+    {
+      "id": "chemistry",
+      "name": "Engineering Chemistry",
+      "description": "Five focused units covering the complete Engineering Chemistry PYQ collection.",
+      "accent": "violet",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        {
+          "number": 1,
+          "title": "Bonding & Spectroscopy",
+          "lectureUrl": "https://www.youtube.com/playlist?list=PLLf6O8XdGj03ktP4MHmIV87pHZHBEUF6f",
+          "pyqUrl": "/resources/pyqs/engineering-chemistry/Engineering_Chemistry_Unit_1_PYQs.pdf"
+        },
+        {
+          "number": 2,
+          "title": "Chemical Kinetics & Surface Chemistry",
+          "lectureUrl": "https://www.youtube.com/playlist?list=PLgrPoGl4jGdo1G93jv-pkmw5RCHM9xTc-",
+          "pyqUrl": "/resources/pyqs/engineering-chemistry/Engineering_Chemistry_Unit_2_PYQs.pdf"
+        },
+        {
+          "number": 3,
+          "title": "Electrochemistry, Nanochemistry & Environmental Chemistry",
+          "lectureUrl": "https://www.youtube.com/playlist?list=PLLf6O8XdGj03pNhe069q3fHouzq64Vvsm",
+          "pyqUrl": "/resources/pyqs/engineering-chemistry/Engineering_Chemistry_Unit_3_PYQs.pdf"
+        },
+        {
+          "number": 4,
+          "title": "Stereochemistry & Reaction Mechanism",
+          "lectureUrl": "https://www.youtube.com/playlist?list=PLLf6O8XdGj03fWMXEe-8QJNVJ-ySOF0jO",
+          "pyqUrl": "/resources/pyqs/engineering-chemistry/Engineering_Chemistry_Unit_4_PYQs.pdf"
+        },
+        {
+          "number": 5,
+          "title": "Polymers, Water Analysis & Solid Waste Management",
+          "lectureUrl": null,
+          "pyqUrl": "/resources/pyqs/engineering-chemistry/Engineering_Chemistry_Unit_5_PYQs.pdf"
+        }
+      ]
+    },
+    {
+      "id": "bet",
+      "name": "Basic Electronics",
+      "description": "Unit-wise Electronics questions from semiconductor devices to electronic instruments.",
+      "accent": "yellow",
+      "lectureUrl": "https://www.youtube.com/watch?v=7jaa1rlW7Ak&list=PLBlnK6fEyqRiw-GZRqfnlVIBz9dxrqHJS",
+      "notesUrl": "https://college-study.netlify.app/first-semester",
+      "units": [
+        { "number": 1, "title": "P-N Junction Diode & Applications", "pyqUrl": "/resources/pyqs/basic-electronics/Basic_Electronics_Unit_1_PYQs.pdf" },
+        { "number": 2, "title": "Transistors, FETs & Operational Amplifiers", "pyqUrl": "/resources/pyqs/basic-electronics/Basic_Electronics_Unit_2_PYQs.pdf" },
+        { "number": 3, "title": "Digital Logic", "pyqUrl": "/resources/pyqs/basic-electronics/Basic_Electronics_Unit_3_PYQs.pdf" },
+        { "number": 4, "title": "Transducers & Measurement Errors", "pyqUrl": "/resources/pyqs/basic-electronics/Basic_Electronics_Unit_4_PYQs.pdf" },
+        { "number": 5, "title": "Display Devices & Electronic Instruments", "pyqUrl": "/resources/pyqs/basic-electronics/Basic_Electronics_Unit_5_PYQs.pdf" }
+      ]
+    },
+    {
+      "id": "bem",
+      "name": "Engineering Mechanics",
+      "description": "Five units of exam-focused Mechanics questions, separated cleanly by topic.",
+      "accent": "orange",
+      "lectureUrl": "https://www.youtube.com/playlist?list=PLDN15nk5uLiAyM7MbRBF1eIFC8y5vMRxI",
+      "notesUrl": "https://college-study.netlify.app/first-semester",
+      "units": [
+        { "number": 1, "title": "Fundamental Concepts & Definitions", "pyqUrl": "/resources/pyqs/engineering-mechanics/Engineering_Mechanics_Unit_1_PYQs.pdf" },
+        { "number": 2, "title": "Two-Dimensional Force Systems & Friction", "pyqUrl": "/resources/pyqs/engineering-mechanics/Engineering_Mechanics_Unit_2_PYQs.pdf" },
+        { "number": 3, "title": "Beams & Trusses", "pyqUrl": "/resources/pyqs/engineering-mechanics/Engineering_Mechanics_Unit_3_PYQs.pdf" },
+        { "number": 4, "title": "Centroid & Moment of Inertia", "pyqUrl": "/resources/pyqs/engineering-mechanics/Engineering_Mechanics_Unit_4_PYQs.pdf" },
+        { "number": 5, "title": "Introduction to Strength of Materials", "pyqUrl": "/resources/pyqs/engineering-mechanics/Engineering_Mechanics_Unit_5_PYQs.pdf" }
+      ]
+    },
+    {
+      "id": "pc",
+      "name": "Professional Communication",
+      "description": "Unit-wise communication PYQs from fundamentals through value-based reading.",
+      "accent": "sky",
+      "lectureUrl": "https://www.youtube.com/playlist?list=PL3qvHcrYGy1sihJ6-xK8uHoWTN6W6PK9I",
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Fundamentals of Technical Communication", "pyqUrl": "/resources/pyqs/professional-communication/Professional_Communication_Unit_1_PYQs.pdf" },
+        { "number": 2, "title": "Elements of Written Communication", "pyqUrl": "/resources/pyqs/professional-communication/Professional_Communication_Unit_2_PYQs.pdf" },
+        { "number": 3, "title": "Forms of Technical Communication", "pyqUrl": "/resources/pyqs/professional-communication/Professional_Communication_Unit_3_PYQs.pdf" },
+        { "number": 4, "title": "Presentation Strategies", "pyqUrl": "/resources/pyqs/professional-communication/Professional_Communication_Unit_4_PYQs.pdf" },
+        { "number": 5, "title": "Value-based Text Reading", "pyqUrl": "/resources/pyqs/professional-communication/Professional_Communication_Unit_5_PYQs.pdf" }
+      ]
+    }
+  ],
   "syllabi": [
     {
       "id": "chemistry",
@@ -33,7 +120,7 @@
     },
     {
       "id": "bet",
-      "title": "Basic Electrical Technology",
+      "title": "Basic Electronics",
       "available": true,
       "url": "https://drive.google.com/file/d/1Vzy7SGv8fbdiv-O0uBeokwdqtfcRzkGb/view?usp=drive_link"
     },
@@ -111,8 +198,16 @@
         {
           "id": "chem-pyq",
           "type": "pyq",
-          "title": "Chemistry PYQs",
-          "description": "Previous-year papers are coming soon",
+          "title": "Chemistry Unit-wise PYQs",
+          "description": "Open the five-unit PDF collection",
+          "url": "#unit-vault",
+          "available": true
+        },
+        {
+          "id": "chem-books",
+          "type": "book",
+          "title": "Recommended Chemistry Books",
+          "description": "Recommended book PDFs will be added soon",
           "url": null,
           "available": false
         }
@@ -146,8 +241,16 @@
         {
           "id": "pc-pyq",
           "type": "pyq",
-          "title": "PC Previous-Year Questions",
-          "description": "PYQ collection is coming soon",
+          "title": "PC Unit-wise PYQs",
+          "description": "Open the five-unit PDF collection",
+          "url": "#unit-vault",
+          "available": true
+        },
+        {
+          "id": "pc-books",
+          "type": "book",
+          "title": "Recommended Communication Books",
+          "description": "Recommended book PDFs will be added soon",
           "url": null,
           "available": false
         }
@@ -181,10 +284,18 @@
         {
           "id": "bem-pyq",
           "type": "pyq",
-          "title": "BEM PYQs",
-          "description": "Previous-year resources on College Study",
-          "url": "https://college-study.netlify.app/first-semester",
+          "title": "Mechanics Unit-wise PYQs",
+          "description": "Open the five-unit PDF collection",
+          "url": "#unit-vault",
           "available": true
+        },
+        {
+          "id": "bem-books",
+          "type": "book",
+          "title": "Recommended Engineering Mechanics Books",
+          "description": "Recommended book PDFs will be added soon",
+          "url": null,
+          "available": false
         }
       ]
     },
@@ -204,24 +315,32 @@
           "description": "The complete pack will be added shortly",
           "url": null,
           "available": false
+        },
+        {
+          "id": "ees-books",
+          "type": "book",
+          "title": "Recommended EES Books",
+          "description": "Recommended book PDFs will be added soon",
+          "url": null,
+          "available": false
         }
       ]
     },
     {
       "id": "bet",
-      "name": "Basic Electrical Technology",
+      "name": "Basic Electronics",
       "shortName": "BET & Tutorial",
       "icon": "bolt",
       "accent": "yellow",
-      "description": "Electrical fundamentals, machines and tutorial resources.",
-      "topics": ["Circuits", "AC", "Machines", "Measurements"],
+      "description": "Electronic devices, circuits and tutorial resources.",
+      "topics": ["Diodes", "Transistors", "Amplifiers", "Digital Basics"],
       "resources": [
         {
           "id": "bet-lectures",
           "type": "lecture",
-          "title": "Basic Electrical Lectures",
+          "title": "Basic Electronics Lectures",
           "description": "Complete YouTube playlist",
-          "url": "https://www.youtube.com/watch?v=Vd2UJiIPbag&list=PL9RcWoqXmzaLTYUdnzKhF4bYug3GjGcEc",
+          "url": "https://www.youtube.com/watch?v=7jaa1rlW7Ak&list=PLBlnK6fEyqRiw-GZRqfnlVIBz9dxrqHJS",
           "available": true
         },
         {
@@ -235,8 +354,16 @@
         {
           "id": "bet-pyq",
           "type": "pyq",
-          "title": "BET PYQs",
-          "description": "Previous-year papers are coming soon",
+          "title": "Electronics Unit-wise PYQs",
+          "description": "Open the five-unit PDF collection",
+          "url": "#unit-vault",
+          "available": true
+        },
+        {
+          "id": "bet-books",
+          "type": "book",
+          "title": "Recommended Basic Electronics Books",
+          "description": "Recommended book PDFs will be added soon",
           "url": null,
           "available": false
         }
@@ -274,6 +401,14 @@
           "description": "PYQ and viva preparation resources",
           "url": "https://college-study.netlify.app/first-semester",
           "available": true
+        },
+        {
+          "id": "workshop-books",
+          "type": "book",
+          "title": "Recommended Workshop Books",
+          "description": "Recommended book PDFs will be added soon",
+          "url": null,
+          "available": false
         }
       ]
     },
@@ -307,6 +442,14 @@
           "type": "pyq",
           "title": "Food Technology PYQs",
           "description": "Previous-year papers are coming soon",
+          "url": null,
+          "available": false
+        },
+        {
+          "id": "food-books",
+          "type": "book",
+          "title": "Recommended Food Technology Books",
+          "description": "Recommended book PDFs will be added soon",
           "url": null,
           "available": false
         }

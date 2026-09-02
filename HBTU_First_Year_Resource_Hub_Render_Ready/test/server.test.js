@@ -41,6 +41,28 @@ test("resource filters narrow results", async () => {
   assert.equal(data.subjects[0].resources[0].id, "chem-spectroscopy");
 });
 
+test("every subject includes a recommended books section", async () => {
+  const response = await fetch(`${baseUrl}/api/resources?type=book`);
+  const data = await response.json();
+  assert.equal(data.subjects.length, 7);
+  assert.ok(data.subjects.every((subject) => subject.resources.length === 1));
+  assert.ok(data.subjects.every((subject) => subject.resources[0].type === "book"));
+});
+
+test("unit vault exposes four subjects and twenty unit PDFs", async () => {
+  const response = await fetch(`${baseUrl}/api/resources`);
+  const data = await response.json();
+  assert.equal(data.unitCollections.length, 4);
+  assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 20);
+});
+
+test("unit PDF opens inline from the website", async () => {
+  const response = await fetch(`${baseUrl}/resources/pyqs/engineering-chemistry/Engineering_Chemistry_Unit_1_PYQs.pdf`);
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("content-type"), "application/pdf");
+  assert.ok((await response.arrayBuffer()).byteLength > 1000);
+});
+
 test("spa fallback serves the website", async () => {
   const response = await fetch(`${baseUrl}/any-page`);
   const html = await response.text();

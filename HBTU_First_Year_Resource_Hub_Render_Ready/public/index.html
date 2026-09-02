@@ -40,6 +40,7 @@
 
         <div class="desktop-links">
           <a href="#resources">Resources</a>
+          <a href="#unit-vault">Unit PYQs</a>
           <a href="#syllabus">Syllabus</a>
           <a href="#planner">Study desk</a>
           <a href="#about">About</a>
@@ -57,6 +58,7 @@
       </nav>
       <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
         <a href="#resources">Resources</a>
+        <a href="#unit-vault">Unit PYQs</a>
         <a href="#syllabus">Syllabus</a>
         <a href="#planner">Study desk</a>
         <a href="#about">About</a>
@@ -151,6 +153,7 @@
             <button class="filter-chip" data-type="lecture" type="button">Lectures</button>
             <button class="filter-chip" data-type="notes" type="button">Notes</button>
             <button class="filter-chip" data-type="pyq" type="button">PYQs</button>
+            <button class="filter-chip" data-type="book" type="button">Books</button>
             <button class="filter-chip" data-type="saved" type="button">★ Saved</button>
           </div>
         </div>
@@ -164,6 +167,32 @@
 
         <div class="resource-grid" id="resource-grid" aria-live="polite">
           <div class="loading-card"></div><div class="loading-card"></div><div class="loading-card"></div>
+        </div>
+      </section>
+
+      <section class="section unit-vault-section" id="unit-vault">
+        <div class="shell">
+          <div class="section-heading reveal">
+            <div>
+              <span class="section-kicker">UNIT-WISE LEARNING</span>
+              <h2>One subject. Five units.<br />Zero mixed-up PDFs.</h2>
+            </div>
+            <p>Open only the unit you are studying. Each unit keeps lectures, notes, PYQs and recommended books together in one focused folder.</p>
+          </div>
+
+          <div class="unit-subject-tabs reveal" id="unit-subject-tabs" aria-label="Select a subject for unit-wise resources"></div>
+
+          <div class="unit-course-panel reveal">
+            <div class="unit-course-header">
+              <div>
+                <span class="section-kicker">SELECTED SUBJECT</span>
+                <h3 id="unit-course-name">Engineering Chemistry</h3>
+                <p id="unit-course-description"></p>
+              </div>
+              <span class="pdf-ready-badge"><b>20</b> unit PDFs ready</span>
+            </div>
+            <div class="unit-list" id="unit-list" aria-live="polite"></div>
+          </div>
         </div>
       </section>
 
