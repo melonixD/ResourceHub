@@ -7,19 +7,20 @@
     "lastUpdated": "2026-09-02"
   },
   "branches": [
-    { "id": "civil", "code": "CE", "name": "Civil Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "cse", "code": "CSE", "name": "Computer Science & Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "electrical", "code": "EE", "name": "Electrical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "electronics", "code": "EN", "name": "Electronics Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "information-technology", "code": "IT", "name": "Information Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "mechanical", "code": "ME", "name": "Mechanical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "biochemical", "code": "BE", "name": "Biochemical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "chemical", "code": "CH", "name": "Chemical Engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "food-technology", "code": "FT", "name": "Food Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "food-tech"] },
-    { "id": "leather", "code": "LT", "name": "Leather Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "oil", "code": "OT", "name": "Oil Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "paint", "code": "PT", "name": "Paint Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "plastic", "code": "PL", "name": "Plastic Technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] }
+    { "id": "civil", "code": "CE", "name": "Civil Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "cse", "code": "CSE", "name": "Computer Science & Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "electrical", "code": "EE", "name": "Electrical Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "electronics", "code": "EN", "name": "Electronics Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "information-technology", "code": "IT", "name": "Information Technology", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "mechanical", "code": "ME", "name": "Mechanical Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "biochemical", "code": "BE", "name": "Biochemical Engineering", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "biotechnology", "code": "BT", "name": "Biotechnology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "chemical", "code": "CH", "name": "Chemical Engineering", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "food-technology", "code": "FT", "name": "Food Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "food-tech"] },
+    { "id": "leather", "code": "LT", "name": "Leather Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "oil", "code": "OT", "name": "Oil Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "paint", "code": "PT", "name": "Paint Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
+    { "id": "plastic", "code": "PL", "name": "Plastic Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] }
   ],
   "unitCollections": [
     {
@@ -151,6 +152,40 @@
         { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
         { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
       ]
+    }
+  ],
+  "syllabusFolders": [
+    {
+      "id": "semester-1-technology",
+      "semester": 1,
+      "group": "technology",
+      "title": "Semester 1",
+      "subtitle": "Technology branches",
+      "syllabusIds": ["chemistry", "pc", "bem", "ees", "bet", "workshop", "food-tech"]
+    },
+    {
+      "id": "semester-1-engineering",
+      "semester": 1,
+      "group": "engineering",
+      "title": "Semester 1",
+      "subtitle": "Engineering branches",
+      "syllabusIds": []
+    },
+    {
+      "id": "semester-2-technology",
+      "semester": 2,
+      "group": "technology",
+      "title": "Semester 2",
+      "subtitle": "Technology branches",
+      "syllabusIds": []
+    },
+    {
+      "id": "semester-2-engineering",
+      "semester": 2,
+      "group": "engineering",
+      "title": "Semester 2",
+      "subtitle": "Engineering branches",
+      "syllabusIds": []
     }
   ],
   "syllabi": [

@@ -62,7 +62,7 @@ function cacheElements() {
   [
     "theme-toggle", "menu-toggle", "mobile-menu", "menu-backdrop", "available-count", "branch-count",
     "branch-search", "branch-list", "subject-pane", "subject-pane-branch", "subject-list", "content-pane", "path-branch",
-    "path-subject", "subject-header", "subject-code", "course-name", "course-description", "course-status",
+    "path-subject", "subject-header", "subject-code", "course-name", "course-description", "course-status", "subject-syllabus",
     "unit-list", "syllabus-list", "today-label", "task-form", "task-input", "task-list",
     "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
@@ -250,6 +250,7 @@ function renderBrowser(changeType) {
   elements["course-description"].textContent = subject.description;
   const pdfCount = countPdfs(subject);
   elements["course-status"].textContent = subject.units.length + " units" + (pdfCount ? " · " + pdfCount + " PDFs" : "");
+  renderSubjectSyllabus(branch, subject);
   elements["unit-list"].innerHTML = subject.units.map((unit, index) => renderUnit(subject, unit, index)).join("");
 
   elements["unit-list"].querySelectorAll("details").forEach((details) => {
@@ -262,6 +263,30 @@ function renderBrowser(changeType) {
   });
 
   animateBrowser(changeType);
+}
+
+function renderSubjectSyllabus(branch, subject) {
+  const syllabus = branch.group === "technology"
+    ? state.data.syllabi.find((item) => item.id === subject.id && item.available && item.url)
+    : null;
+  const link = elements["subject-syllabus"];
+
+  if (syllabus) {
+    link.href = syllabus.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "View syllabus ↗";
+    link.classList.remove("unavailable");
+    link.setAttribute("aria-disabled", "false");
+    return;
+  }
+
+  link.removeAttribute("href");
+  link.removeAttribute("target");
+  link.removeAttribute("rel");
+  link.textContent = "Syllabus coming soon";
+  link.classList.add("unavailable");
+  link.setAttribute("aria-disabled", "true");
 }
 
 function animateBrowser(changeType) {
@@ -368,16 +393,35 @@ function renderMaterial(material) {
 }
 
 function renderSyllabi() {
-  elements["syllabus-list"].innerHTML = state.data.syllabi.map((item, index) => {
-    const content = '<span class="syllabus-index">' + twoDigits(index + 1) + '</span>' +
-      '<span><strong>' + escapeHtml(item.title) + '</strong><small>' +
-      (item.available ? "Official syllabus" : "Not available yet") + '</small></span>' +
-      '<i aria-hidden="true">' + (item.available ? "↗" : "—") + '</i>';
-    return item.available
-      ? '<a class="syllabus-item" href="' + escapeHtml(item.url) +
-        '" target="_blank" rel="noopener noreferrer">' + content + '</a>'
-      : '<div class="syllabus-item unavailable">' + content + '</div>';
+  const folders = state.data.syllabusFolders || [];
+  elements["syllabus-list"].innerHTML = folders.map((folder, folderIndex) => {
+    const items = folder.syllabusIds
+      .map((id) => state.data.syllabi.find((item) => item.id === id))
+      .filter(Boolean);
+    const availableCount = items.filter((item) => item.available && item.url).length;
+    const countLabel = availableCount ? availableCount + (availableCount === 1 ? " file" : " files") : "Empty";
+    const contents = items.length
+      ? items.map((item, itemIndex) => renderSyllabusItem(item, itemIndex)).join("")
+      : '<div class="folder-empty"><strong>Nothing added yet</strong><span>Upload-ready for future syllabus files.</span></div>';
+
+    return '<details class="syllabus-folder">' +
+      '<summary><span class="folder-index">' + twoDigits(folderIndex + 1) + '</span>' +
+      '<span class="folder-copy"><strong>' + escapeHtml(folder.title) + '</strong><small>' +
+      escapeHtml(folder.subtitle) + '</small></span><span class="folder-count">' + countLabel +
+      '</span><span class="folder-chevron" aria-hidden="true"></span></summary>' +
+      '<div class="folder-contents">' + contents + '</div></details>';
   }).join("");
+}
+
+function renderSyllabusItem(item, index) {
+  const content = '<span class="syllabus-index">' + twoDigits(index + 1) + '</span>' +
+    '<span><strong>' + escapeHtml(item.title) + '</strong><small>' +
+    (item.available ? "Official syllabus" : "Not available yet") + '</small></span>' +
+    '<i aria-hidden="true">' + (item.available ? "↗" : "—") + '</i>';
+  return item.available
+    ? '<a class="syllabus-item" href="' + escapeHtml(item.url) +
+      '" target="_blank" rel="noopener noreferrer">' + content + '</a>'
+    : '<div class="syllabus-item unavailable">' + content + '</div>';
 }
 
 function updateStats() {

@@ -790,14 +790,38 @@ body.menu-open {
 }
 
 .subject-status {
-  align-self: start;
-  margin-top: 4px;
   padding: 6px 9px;
   border-radius: 999px;
   background: var(--surface-muted);
   color: var(--secondary);
   font-size: 11px;
   white-space: nowrap;
+}
+
+.subject-actions {
+  display: flex;
+  align-self: start;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.subject-syllabus {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 570;
+  white-space: nowrap;
+}
+
+.subject-syllabus:hover {
+  text-decoration: underline;
+}
+
+.subject-syllabus.unavailable {
+  color: var(--tertiary);
+  pointer-events: none;
+  text-decoration: none;
 }
 
 .unit-list {
@@ -1187,9 +1211,110 @@ a.material-item:hover {
 }
 
 .syllabus-list {
+  border-top: 1px solid var(--border);
+}
+
+.syllabus-folder {
+  border-bottom: 1px solid var(--border);
+}
+
+.syllabus-folder > summary {
+  display: grid;
+  min-height: 78px;
+  grid-template-columns: 40px minmax(0, 1fr) auto 22px;
+  align-items: center;
+  gap: 12px;
+  padding-inline: 4px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.syllabus-folder > summary::-webkit-details-marker {
+  display: none;
+}
+
+.folder-index {
+  color: var(--tertiary);
+  font-size: 12px;
+}
+
+.folder-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.folder-copy strong {
+  font-size: 17px;
+  font-weight: 610;
+  letter-spacing: -0.025em;
+}
+
+.folder-copy small,
+.folder-count {
+  color: var(--secondary);
+  font-size: 12px;
+}
+
+.folder-count {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+}
+
+.folder-chevron {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.folder-chevron::before,
+.folder-chevron::after {
+  position: absolute;
+  top: 7px;
+  width: 7px;
+  height: 1px;
+  background: var(--tertiary);
+  content: "";
+  transition: transform 0.2s ease;
+}
+
+.folder-chevron::before {
+  left: 2px;
+  transform: rotate(45deg);
+}
+
+.folder-chevron::after {
+  right: 2px;
+  transform: rotate(-45deg);
+}
+
+.syllabus-folder[open] .folder-chevron::before {
+  transform: rotate(-45deg);
+}
+
+.syllabus-folder[open] .folder-chevron::after {
+  transform: rotate(45deg);
+}
+
+.folder-contents {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  border-top: 1px solid var(--border);
+  column-gap: 42px;
+  padding: 0 4px 22px 52px;
+  animation: folder-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes folder-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 .syllabus-item {
@@ -1198,16 +1323,8 @@ a.material-item:hover {
   grid-template-columns: 38px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px 12px 0;
+  padding: 10px 8px 10px 0;
   border-bottom: 1px solid var(--border);
-}
-
-.syllabus-item:nth-child(odd) {
-  margin-right: 28px;
-}
-
-.syllabus-item:nth-child(even) {
-  margin-left: 28px;
 }
 
 a.syllabus-item:hover strong {
@@ -1248,6 +1365,27 @@ a.syllabus-item:hover strong {
 
 .syllabus-item.unavailable {
   color: var(--tertiary);
+}
+
+.folder-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  min-height: 92px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--tertiary);
+}
+
+.folder-empty strong {
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 580;
+}
+
+.folder-empty span {
+  font-size: 12px;
 }
 
 .study-section {
@@ -1559,13 +1697,9 @@ a.syllabus-item:hover strong {
     padding: 18px 20px 24px;
   }
 
-  .syllabus-list {
+  .folder-contents {
     grid-template-columns: 1fr;
-  }
-
-  .syllabus-item:nth-child(odd),
-  .syllabus-item:nth-child(even) {
-    margin: 0;
+    padding-left: 40px;
   }
 }
 
@@ -1634,9 +1768,9 @@ a.syllabus-item:hover strong {
     font-size: 20px;
   }
 
-  .subject-status {
+  .subject-actions {
     grid-column: 2;
-    justify-self: start;
+    align-items: flex-start;
     margin: -5px 0 0;
   }
 

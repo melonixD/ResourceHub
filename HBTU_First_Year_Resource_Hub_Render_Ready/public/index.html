@@ -7,8 +7,8 @@
     <meta name="theme-color" content="#f5f5f7" />
     <title>HelpDesk · HBTU</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/premium.css?v=20260903-4" />
-    <script src="/app.js?v=20260903-4" defer></script>
+    <link rel="stylesheet" href="/premium.css?v=20260903-5" />
+    <script src="/app.js?v=20260903-5" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#resources">Skip to resources</a>
@@ -86,9 +86,22 @@
         <p class="hero-copy">Choose your branch. Find your subject. Open exactly what you need.</p>
         <p class="hero-credit">Made with love by <strong>Akshat Shukla</strong> and <strong>Priyanshu Dixit</strong>.</p>
         <div class="hero-meta" aria-label="Library overview">
-          <span><strong>13</strong> branches</span>
+          <span><strong>14</strong> branches</span>
           <span><strong>7</strong> first-year subjects</span>
           <span><strong id="available-count">20</strong> unit PDFs</span>
+        </div>
+      </section>
+
+      <section class="syllabus-section" id="syllabus">
+        <div class="shell">
+          <header class="section-header">
+            <div>
+              <p class="overline">SYLLABUS</p>
+              <h2>Semester folders</h2>
+            </div>
+            <p>Semester 1 for Technology branches is available now. The remaining folders are ready for future uploads.</p>
+          </header>
+          <div class="syllabus-list" id="syllabus-list"></div>
         </div>
       </section>
 
@@ -137,7 +150,10 @@
                 <h3 id="course-name">Engineering Chemistry</h3>
                 <p id="course-description"></p>
               </div>
-              <span class="subject-status" id="course-status">5 units</span>
+              <div class="subject-actions">
+                <span class="subject-status" id="course-status">5 units</span>
+                <a class="subject-syllabus unavailable" id="subject-syllabus" aria-disabled="true">Syllabus coming soon</a>
+              </div>
             </header>
 
             <div class="unit-list" id="unit-list" aria-live="polite">
@@ -180,19 +196,6 @@
               <a href="https://wa.me/919305819589" target="_blank" rel="noopener noreferrer">+91 93058 19589 <i>↗</i></a>
             </div>
           </article>
-        </div>
-      </section>
-
-      <section class="syllabus-section" id="syllabus">
-        <div class="shell">
-          <header class="section-header">
-            <div>
-              <p class="overline">REFERENCE</p>
-              <h2>Official syllabus</h2>
-            </div>
-            <p>Start here before choosing a lecture or paper.</p>
-          </header>
-          <div class="syllabus-list" id="syllabus-list"></div>
         </div>
       </section>
 

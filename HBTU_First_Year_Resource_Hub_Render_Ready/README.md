@@ -4,11 +4,12 @@ HelpDesk is a clean, branch-first resource library for HBTU juniors. It uses a l
 
 ## What is included
 
-- 13 engineering branches in a focused three-pane browser
+- 14 branches—including Biotechnology—in a focused three-pane browser
 - 7 first-year subjects, each organised into Units 1–5
 - Lectures, Notes, PYQs and Books inside every unit
 - 20 separated unit-wise PYQ PDFs that open in the browser
-- Official syllabus links
+- Four syllabus folders split by semester and Engineering/Technology branches
+- Semester 1 Technology syllabi linked both at the top and inside relevant subjects
 - Mobile-friendly vertical branch and subject lists with no sideways scrolling
 - Static resource fallback and cache-safe application updates
 - Android Chrome and WebView-compatible rendering and touch controls
@@ -59,7 +60,8 @@ The navigation and resource links live in `data/resources.json`:
 
 - `branches` controls the engineering branch list and which subjects appear in each branch.
 - `unitCollections` controls each subject's five units and its lecture, notes, PYQ, and book links.
-- `syllabi` controls the official syllabus section.
+- `syllabusFolders` controls the four semester/branch folders.
+- `syllabi` controls the individual syllabus links available inside those folders and subjects.
 
 Add a resource URL to an individual unit when it is unit-specific, or to the subject collection when one link should appear in every unit. Use `null` for material that is not available yet.
 

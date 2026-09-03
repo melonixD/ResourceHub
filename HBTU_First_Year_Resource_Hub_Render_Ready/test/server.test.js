@@ -51,14 +51,26 @@ test("every subject includes a recommended books section", async () => {
   assert.ok(data.subjects.every((subject) => subject.resources[0].type === "book"));
 });
 
-test("library exposes thirteen branches and seven unit-based subjects", async () => {
+test("library exposes fourteen branches including Biotechnology", async () => {
   const response = await fetch(`${baseUrl}/api/resources`);
   const data = await response.json();
-  assert.equal(data.branches.length, 13);
+  assert.equal(data.branches.length, 14);
   assert.equal(data.unitCollections.length, 7);
   assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 35);
   assert.ok(data.branches.some((branch) => branch.name === "Mechanical Engineering"));
   assert.ok(data.branches.some((branch) => branch.name === "Electrical Engineering"));
+  assert.ok(data.branches.some((branch) => branch.name === "Biotechnology" && branch.group === "technology"));
+  assert.equal(data.branches.filter((branch) => branch.group === "engineering").length, 6);
+  assert.equal(data.branches.filter((branch) => branch.group === "technology").length, 8);
+});
+
+test("syllabus is grouped into four semester and branch folders", async () => {
+  const response = await fetch(`${baseUrl}/api/resources`);
+  const data = await response.json();
+  assert.equal(data.syllabusFolders.length, 4);
+  assert.equal(data.syllabusFolders[0].id, "semester-1-technology");
+  assert.equal(data.syllabusFolders[0].syllabusIds.length, 7);
+  assert.ok(data.syllabusFolders.slice(1).every((folder) => folder.syllabusIds.length === 0));
 });
 
 test("twenty separated unit PDFs remain linked", async () => {
@@ -86,6 +98,8 @@ test("spa fallback serves the website", async () => {
   assert.match(html, /class="resource-browser"/);
   assert.match(html, /id="branch-list"/);
   assert.match(html, /id="subject-list"/);
+  assert.match(html, /id="subject-syllabus"/);
+  assert.ok(html.indexOf('id="syllabus"') < html.indexOf('id="resources"'));
   assert.doesNotMatch(html, /resource-grid|30 resources across all subjects/);
 });
 
@@ -103,7 +117,7 @@ test("static resource fallback works and application assets cannot go stale", as
   const fallback = await fetch(`${baseUrl}/resources.json`);
   const data = await fallback.json();
   assert.equal(fallback.status, 200);
-  assert.equal(data.branches.length, 13);
+  assert.equal(data.branches.length, 14);
   assert.match(fallback.headers.get("cache-control"), /no-store/);
 
   const script = await fetch(`${baseUrl}/app.js`);
@@ -120,6 +134,8 @@ test("static resource fallback works and application assets cannot go stale", as
   assert.match(styleText, /@keyframes unit-row-enter/);
   assert.match(scriptText, /animateBrowser\(changeType\)/);
   assert.match(scriptText, /prefersReducedMotion\(\)/);
+  assert.match(scriptText, /renderSubjectSyllabus\(branch, subject\)/);
+  assert.match(scriptText, /syllabusFolders/);
 });
 
 test("help section includes both supplied profiles and revealable WhatsApp contacts", async () => {
