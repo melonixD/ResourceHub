@@ -6,8 +6,9 @@ HelpDesk is a clean, branch-first resource library for HBTU juniors. It uses a l
 
 - 14 branches—including Biotechnology—in a focused three-pane browser
 - Branch → Semester → Subject → Unit resource navigation
-- 6 shared Semester 1 Technology subjects plus one branch-specific Core subject
-- Empty Semester 2 and Engineering resource states, ready for later material
+- Engineering Semester 1 contains seven shared subjects: Mathematics 1, Basic Electrical Engineering, Engineering Graphics, Engineering Physics, Universal Human Value, Programming and Problem Solving, and English and Technical Writing
+- Technology Semester 1 keeps six shared subjects plus one branch-specific Core subject
+- Technology Semester 2 uses the Engineering Semester 1 subject set; Engineering Semester 2 uses the six shared Technology Semester 1 subjects
 - Lectures, Notes, PYQs and Books inside every unit
 - 20 separated unit-wise PYQ PDFs that open in the browser
 - Two large syllabus groups—Engineering and Technology—with Semester 1 and Semester 2 inside each

@@ -27,6 +27,13 @@ const subjectCodes = {
   "oil-core": "OT",
   "paint-core": "PT",
   "plastic-core": "PL",
+  "maths-1": "M1",
+  bee: "BEE",
+  "engineering-graphics": "EG",
+  "engineering-physics": "EP",
+  uhv: "UHV",
+  pps: "PPS",
+  etw: "ETW",
 };
 
 const materialIcons = {
@@ -68,7 +75,7 @@ function twoDigits(value) {
 
 function cacheElements() {
   [
-    "theme-toggle", "menu-toggle", "mobile-menu", "menu-backdrop", "available-count", "branch-count",
+    "theme-toggle", "menu-toggle", "mobile-menu", "menu-backdrop", "available-count", "subject-count", "branch-count",
     "branch-search", "branch-list", "semester-pane", "semester-pane-branch", "semester-list", "subject-pane", "subject-pane-semester",
     "subject-list", "content-pane", "path-branch", "path-semester", "path-subject", "subject-header", "subject-code",
     "course-name", "course-description", "course-status", "subject-syllabus",
@@ -511,6 +518,7 @@ function renderSyllabusItem(item, index) {
 function updateStats() {
   const pdfCount = state.data.unitCollections.reduce((total, subject) => total + countPdfs(subject), 0);
   elements["available-count"].textContent = String(pdfCount);
+  elements["subject-count"].textContent = String(state.data.unitCollections.length);
 }
 
 function initialisePlanner() {

@@ -55,8 +55,8 @@ test("library exposes fourteen branches including Biotechnology", async () => {
   const response = await fetch(`${baseUrl}/api/resources`);
   const data = await response.json();
   assert.equal(data.branches.length, 14);
-  assert.equal(data.unitCollections.length, 14);
-  assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 70);
+  assert.equal(data.unitCollections.length, 21);
+  assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 105);
   assert.ok(data.branches.some((branch) => branch.name === "Mechanical Engineering"));
   assert.ok(data.branches.some((branch) => branch.name === "Electrical Engineering"));
   assert.ok(data.branches.some((branch) => branch.name === "Biotechnology" && branch.group === "technology"));
@@ -69,13 +69,28 @@ test("resource hierarchy is branch, semester, subject and unit", async () => {
   const data = await response.json();
   const technologyBranches = data.branches.filter((branch) => branch.group === "technology");
   const engineeringBranches = data.branches.filter((branch) => branch.group === "engineering");
-  const commonSubjects = ["chemistry", "bem", "bet", "pc", "ees", "workshop"];
+  const technologySubjects = ["chemistry", "bem", "bet", "pc", "ees", "workshop"];
+  const engineeringSubjects = ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"];
 
   assert.ok(technologyBranches.every((branch) => branch.semesterSubjectIds["1"].length === 7));
-  assert.ok(technologyBranches.every((branch) => commonSubjects.every((id) => branch.semesterSubjectIds["1"].includes(id))));
-  assert.ok(technologyBranches.every((branch) => branch.semesterSubjectIds["2"].length === 0));
-  assert.ok(engineeringBranches.every((branch) => branch.semesterSubjectIds["1"].length === 0));
-  assert.ok(engineeringBranches.every((branch) => branch.semesterSubjectIds["2"].length === 0));
+  assert.ok(technologyBranches.every((branch) => technologySubjects.every((id) => branch.semesterSubjectIds["1"].includes(id))));
+  assert.ok(technologyBranches.every((branch) => branch.semesterSubjectIds["2"].length === 7));
+  assert.ok(technologyBranches.every((branch) => engineeringSubjects.every((id) => branch.semesterSubjectIds["2"].includes(id))));
+  assert.ok(engineeringBranches.every((branch) => branch.semesterSubjectIds["1"].length === 7));
+  assert.ok(engineeringBranches.every((branch) => engineeringSubjects.every((id) => branch.semesterSubjectIds["1"].includes(id))));
+  assert.ok(engineeringBranches.every((branch) => branch.semesterSubjectIds["2"].length === 6));
+  assert.ok(engineeringBranches.every((branch) => technologySubjects.every((id) => branch.semesterSubjectIds["2"].includes(id))));
+
+  const engineeringNames = engineeringSubjects.map((id) => data.unitCollections.find((subject) => subject.id === id).name);
+  assert.deepEqual(engineeringNames, [
+    "Engineering Mathematics 1",
+    "Basic Electrical Engineering",
+    "Engineering Graphics",
+    "Engineering Physics",
+    "Universal Human Value",
+    "Programming and Problem Solving",
+    "English and Technical Writing",
+  ]);
 
   const coreIds = technologyBranches.map((branch) => branch.semesterSubjectIds["1"][6]);
   assert.equal(new Set(coreIds).size, 8);

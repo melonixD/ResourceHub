@@ -4,23 +4,23 @@
     "institution": "HBTU",
     "description": "One organised place for first-year syllabi, lectures, notes and previous-year questions.",
     "creators": ["Akshat Shukla", "Priyanshu Dixit"],
-    "lastUpdated": "2026-09-02"
+    "lastUpdated": "2026-09-03"
   },
   "branches": [
-    { "id": "civil", "code": "CE", "name": "Civil Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
-    { "id": "cse", "code": "CSE", "name": "Computer Science & Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
-    { "id": "electrical", "code": "EE", "name": "Electrical Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
-    { "id": "electronics", "code": "EN", "name": "Electronics Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
-    { "id": "information-technology", "code": "IT", "name": "Information Technology", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
-    { "id": "mechanical", "code": "ME", "name": "Mechanical Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
-    { "id": "biochemical", "code": "BE", "name": "Biochemical Engineering", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "biochemical-core"], "2": [] } },
-    { "id": "biotechnology", "code": "BT", "name": "Biotechnology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "biotechnology-core"], "2": [] } },
-    { "id": "chemical", "code": "CH", "name": "Chemical Engineering", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "chemical-core"], "2": [] } },
-    { "id": "food-technology", "code": "FT", "name": "Food Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "food-tech"], "2": [] } },
-    { "id": "leather", "code": "LT", "name": "Leather Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "leather-core"], "2": [] } },
-    { "id": "oil", "code": "OT", "name": "Oil Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "oil-core"], "2": [] } },
-    { "id": "paint", "code": "PT", "name": "Paint Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "paint-core"], "2": [] } },
-    { "id": "plastic", "code": "PL", "name": "Plastic Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "plastic-core"], "2": [] } }
+    { "id": "civil", "code": "CE", "name": "Civil Engineering", "group": "engineering", "semesterSubjectIds": { "1": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"], "2": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] } },
+    { "id": "cse", "code": "CSE", "name": "Computer Science & Engineering", "group": "engineering", "semesterSubjectIds": { "1": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"], "2": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] } },
+    { "id": "electrical", "code": "EE", "name": "Electrical Engineering", "group": "engineering", "semesterSubjectIds": { "1": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"], "2": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] } },
+    { "id": "electronics", "code": "EN", "name": "Electronics Engineering", "group": "engineering", "semesterSubjectIds": { "1": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"], "2": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] } },
+    { "id": "information-technology", "code": "IT", "name": "Information Technology", "group": "engineering", "semesterSubjectIds": { "1": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"], "2": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] } },
+    { "id": "mechanical", "code": "ME", "name": "Mechanical Engineering", "group": "engineering", "semesterSubjectIds": { "1": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"], "2": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] } },
+    { "id": "biochemical", "code": "BE", "name": "Biochemical Engineering", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "biochemical-core"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } },
+    { "id": "biotechnology", "code": "BT", "name": "Biotechnology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "biotechnology-core"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } },
+    { "id": "chemical", "code": "CH", "name": "Chemical Engineering", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "chemical-core"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } },
+    { "id": "food-technology", "code": "FT", "name": "Food Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "food-tech"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } },
+    { "id": "leather", "code": "LT", "name": "Leather Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "leather-core"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } },
+    { "id": "oil", "code": "OT", "name": "Oil Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "oil-core"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } },
+    { "id": "paint", "code": "PT", "name": "Paint Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "paint-core"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } },
+    { "id": "plastic", "code": "PL", "name": "Plastic Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "plastic-core"], "2": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"] } }
   ],
   "unitCollections": [
     {
@@ -247,6 +247,111 @@
       "id": "plastic-core",
       "name": "Plastic Technology Core",
       "description": "Branch-specific Semester 1 material for Plastic Technology.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "maths-1",
+      "name": "Engineering Mathematics 1",
+      "description": "Semester course resources for Engineering Mathematics 1.",
+      "accent": "violet",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "bee",
+      "name": "Basic Electrical Engineering",
+      "description": "Semester course resources for Basic Electrical Engineering.",
+      "accent": "yellow",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "engineering-graphics",
+      "name": "Engineering Graphics",
+      "description": "Semester course resources for Engineering Graphics.",
+      "accent": "orange",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "engineering-physics",
+      "name": "Engineering Physics",
+      "description": "Semester course resources for Engineering Physics.",
+      "accent": "sky",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "uhv",
+      "name": "Universal Human Value",
+      "description": "Semester course resources for Universal Human Value.",
+      "accent": "green",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "pps",
+      "name": "Programming and Problem Solving",
+      "description": "Programming fundamentals and introductory computer science resources.",
+      "accent": "rose",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "etw",
+      "name": "English and Technical Writing",
+      "description": "Semester course resources for English and Technical Writing.",
       "accent": "teal",
       "lectureUrl": null,
       "notesUrl": null,
