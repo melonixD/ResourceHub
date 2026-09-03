@@ -89,13 +89,33 @@ test("spa fallback serves the website", async () => {
   assert.doesNotMatch(html, /resource-grid|30 resources across all subjects/);
 });
 
-test("mobile navigation uses branch and subject selectors", async () => {
+test("mobile navigation keeps branch and subject lists available", async () => {
   const response = await fetch(`${baseUrl}/`);
   const html = await response.text();
-  assert.match(html, /id="branch-select"/);
-  assert.match(html, /id="subject-select"/);
+  assert.match(html, /id="branch-list"[\s\S]*Loading branches/);
+  assert.match(html, /id="subject-list"[\s\S]*Loading subjects/);
+  assert.doesNotMatch(html, /id="branch-select"|id="subject-select"/);
   assert.match(html, /<aside class="mobile-menu"[\s\S]*id="timer-ring"[\s\S]*id="task-form"[\s\S]*<\/aside>/);
   assert.doesNotMatch(html, /class="study-section/);
+});
+
+test("static resource fallback works and application assets cannot go stale", async () => {
+  const fallback = await fetch(`${baseUrl}/resources.json`);
+  const data = await fallback.json();
+  assert.equal(fallback.status, 200);
+  assert.equal(data.branches.length, 13);
+  assert.match(fallback.headers.get("cache-control"), /no-store/);
+
+  const script = await fetch(`${baseUrl}/app.js`);
+  assert.match(script.headers.get("cache-control"), /no-store/);
+  const scriptText = await script.text();
+  assert.match(scriptText, /"\/resources\.json"/);
+  assert.doesNotMatch(scriptText, /replaceAll|padStart|\?\?|\?\./);
+
+  const styles = await fetch(`${baseUrl}/premium.css`);
+  const styleText = await styles.text();
+  assert.match(styleText, /touch-action: pan-y/);
+  assert.match(styleText, /-webkit-overflow-scrolling: touch/);
 });
 
 test("help section includes both supplied profiles and revealable WhatsApp contacts", async () => {
@@ -105,8 +125,8 @@ test("help section includes both supplied profiles and revealable WhatsApp conta
   assert.match(html, /images\/akshat-shukla\.png/);
   assert.match(html, /images\/priyanshu-dixit\.png/);
   assert.match(html, /87870 16664/);
-  assert.match(html, /wa\.me\/919305819889/);
-  assert.match(html, /93058 19889/);
+  assert.match(html, /wa\.me\/919305819589/);
+  assert.match(html, /93058 19589/);
 
   const image = await fetch(`${baseUrl}/images/akshat-shukla.png`);
   assert.equal(image.status, 200);

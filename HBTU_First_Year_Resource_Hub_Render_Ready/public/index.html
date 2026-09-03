@@ -7,8 +7,8 @@
     <meta name="theme-color" content="#f5f5f7" />
     <title>HelpDesk · HBTU</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/premium.css" />
-    <script src="/app.js" defer></script>
+    <link rel="stylesheet" href="/premium.css?v=20260903-3" />
+    <script src="/app.js?v=20260903-3" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#resources">Skip to resources</a>
@@ -111,11 +111,9 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
               <input id="branch-search" type="search" placeholder="Search branches" autocomplete="off" />
             </label>
-            <label class="mobile-picker" for="branch-select">
-              <span>Choose branch</span>
-              <select id="branch-select" aria-label="Choose a branch"></select>
-            </label>
-            <nav class="branch-list" id="branch-list" aria-label="Choose a branch"></nav>
+            <nav class="branch-list" id="branch-list" aria-label="Choose a branch">
+              <p class="pane-loading">Loading branches…</p>
+            </nav>
           </aside>
 
           <aside class="browser-pane subject-pane">
@@ -123,11 +121,9 @@
               <span>SUBJECTS IN</span>
               <strong id="subject-pane-branch">Mechanical Engineering</strong>
             </div>
-            <label class="mobile-picker" for="subject-select">
-              <span>Choose subject</span>
-              <select id="subject-select" aria-label="Choose a subject"></select>
-            </label>
-            <nav class="subject-list" id="subject-list" aria-label="Choose a subject"></nav>
+            <nav class="subject-list" id="subject-list" aria-label="Choose a subject">
+              <p class="pane-loading">Loading subjects…</p>
+            </nav>
           </aside>
 
           <section class="content-pane">
@@ -163,7 +159,7 @@
         <div class="contact-grid">
           <article class="contact-card">
             <button class="profile-trigger" type="button" data-contact-trigger="akshat" aria-expanded="false" aria-controls="contact-akshat">
-              <img src="/images/akshat-shukla.png" alt="Akshat Shukla" loading="lazy" />
+              <img src="/images/akshat-shukla.png" alt="Akshat Shukla" width="92" height="108" loading="lazy" decoding="async" />
               <span class="profile-copy"><strong>Akshat Shukla</strong><small>Tap to show WhatsApp</small></span>
               <span class="profile-arrow" aria-hidden="true">＋</span>
             </button>
@@ -175,13 +171,13 @@
 
           <article class="contact-card">
             <button class="profile-trigger" type="button" data-contact-trigger="priyanshu" aria-expanded="false" aria-controls="contact-priyanshu">
-              <img src="/images/priyanshu-dixit.png" alt="Priyanshu Dixit" loading="lazy" />
+              <img src="/images/priyanshu-dixit.png" alt="Priyanshu Dixit" width="92" height="108" loading="lazy" decoding="async" />
               <span class="profile-copy"><strong>Priyanshu Dixit</strong><small>Tap to show WhatsApp</small></span>
               <span class="profile-arrow" aria-hidden="true">＋</span>
             </button>
             <div class="contact-reveal" id="contact-priyanshu" hidden>
               <span>WhatsApp</span>
-              <a href="https://wa.me/919305819889" target="_blank" rel="noopener noreferrer">+91 93058 19889 <i>↗</i></a>
+              <a href="https://wa.me/919305819589" target="_blank" rel="noopener noreferrer">+91 93058 19589 <i>↗</i></a>
             </div>
           </article>
         </div>

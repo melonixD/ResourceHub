@@ -10,6 +10,7 @@
   --blue: #0071e3;
   --blue-soft: rgba(0, 113, 227, 0.1);
   --shadow: 0 18px 55px rgba(0, 0, 0, 0.075);
+  --header-bg: rgba(245, 245, 247, 0.9);
   --shell: min(1240px, calc(100% - 48px));
   color-scheme: light;
 }
@@ -26,6 +27,7 @@ html[data-theme="dark"] {
   --blue: #2997ff;
   --blue-soft: rgba(41, 151, 255, 0.15);
   --shadow: 0 22px 70px rgba(0, 0, 0, 0.52);
+  --header-bg: rgba(0, 0, 0, 0.9);
   color-scheme: dark;
 }
 
@@ -58,6 +60,12 @@ select {
 
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a,
+summary {
+  touch-action: manipulation;
 }
 
 a {
@@ -105,7 +113,8 @@ body.menu-open {
   z-index: 100;
   top: 0;
   border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--page) 82%, transparent);
+  background: var(--header-bg);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
 }
 
@@ -229,12 +238,14 @@ body.menu-open {
   z-index: 99;
   top: 56px;
   right: 0;
-  bottom: 0;
+  height: calc(100vh - 56px);
+  height: calc(100dvh - 56px);
   display: flex;
   width: min(420px, 100%);
   flex-direction: column;
   gap: 18px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 28px;
   border-left: 1px solid var(--border);
   background: var(--surface);
@@ -448,10 +459,6 @@ body.menu-open {
   box-shadow: var(--shadow);
 }
 
-.mobile-picker {
-  display: none;
-}
-
 .browser-pane {
   min-width: 0;
   border-right: 1px solid var(--border);
@@ -609,6 +616,12 @@ body.menu-open {
   color: var(--secondary);
   font-size: 13px;
   text-align: center;
+}
+
+.pane-loading {
+  margin: 18px 8px;
+  color: var(--tertiary);
+  font-size: 13px;
 }
 
 .subject-pane {
@@ -1439,36 +1452,26 @@ a.syllabus-item:hover strong {
     border-bottom: 1px solid var(--border);
   }
 
-  .branch-search,
   .branch-list,
   .subject-list {
-    display: none;
+    display: flex;
+    max-height: 220px;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 3px;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    touch-action: pan-y;
   }
 
-  .mobile-picker {
-    display: grid;
-    gap: 7px;
-    margin: 0 3px;
+  .branch-item {
+    min-height: 50px;
   }
 
-  .mobile-picker span {
-    color: var(--tertiary);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .mobile-picker select {
-    width: 100%;
-    height: 46px;
-    padding: 0 42px 0 13px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    outline: 0;
-    background: var(--surface);
-    color: var(--text);
-    font-size: 16px;
+  .subject-item {
+    min-height: 58px;
   }
 
   .branch-pane,
@@ -1481,8 +1484,8 @@ a.syllabus-item:hover strong {
     padding-bottom: 10px;
   }
 
-  .subject-pane .mobile-picker {
-    margin-top: 12px;
+  .subject-list {
+    max-height: 235px;
   }
 
   .content-pane {

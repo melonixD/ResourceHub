@@ -9,7 +9,9 @@ HelpDesk is a clean, branch-first resource library for HBTU juniors. It uses a l
 - Lectures, Notes, PYQs and Books inside every unit
 - 20 separated unit-wise PYQ PDFs that open in the browser
 - Official syllabus links
-- Mobile-friendly branch and subject dropdowns with no sideways scrolling
+- Mobile-friendly vertical branch and subject lists with no sideways scrolling
+- Static resource fallback and cache-safe application updates
+- Android Chrome and WebView-compatible rendering and touch controls
 - Local study list and 25-minute focus timer inside the hamburger panel
 - Help and contact section with profile photos and revealable WhatsApp details
 - Responsive light and dark themes
@@ -69,6 +71,7 @@ first-year-resource-hub/
 │   ├── app.js
 │   ├── index.html
 │   ├── premium.css
+│   ├── resources.json      # Static fallback for the library
 │   └── resources/pyqs/   # 20 browser-viewable PDFs
 ├── test/server.test.js
 ├── package.json

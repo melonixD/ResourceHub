@@ -34,7 +34,8 @@ let timerInterval = null;
 
 function readStorage(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    const parsed = JSON.parse(localStorage.getItem(key));
+    return parsed === null || typeof parsed === "undefined" ? fallback : parsed;
   } catch {
     return fallback;
   }
@@ -45,18 +46,22 @@ function saveStorage(key, value) {
 }
 
 function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  return String(value === null || typeof value === "undefined" ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function twoDigits(value) {
+  return value < 10 ? "0" + value : String(value);
 }
 
 function cacheElements() {
   [
     "theme-toggle", "menu-toggle", "mobile-menu", "menu-backdrop", "available-count", "branch-count",
-    "branch-search", "branch-select", "branch-list", "subject-pane-branch", "subject-select", "subject-list", "path-branch",
+    "branch-search", "branch-list", "subject-pane-branch", "subject-list", "path-branch",
     "path-subject", "subject-code", "course-name", "course-description", "course-status",
     "unit-list", "syllabus-list", "today-label", "task-form", "task-input", "task-list",
     "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
@@ -73,22 +78,46 @@ async function initialise() {
   bindBrowserControls();
 
   try {
-    const response = await fetch("/api/resources");
-    if (!response.ok) throw new Error("Resource request failed");
-    state.data = await response.json();
+    state.data = await loadResourceData();
     renderBrowser();
     renderSyllabi();
     updateStats();
   } catch (error) {
     console.error(error);
+    elements["branch-list"].innerHTML = '<p class="no-results">Branches could not load. Please refresh.</p>';
+    elements["subject-list"].innerHTML = '<p class="no-results">Subjects could not load.</p>';
     elements["unit-list"].innerHTML =
       '<div class="empty-state"><h3>Resources unavailable</h3><p>Please refresh the page.</p></div>';
   }
 }
 
+async function loadResourceData() {
+  const sources = ["/api/resources", "/resources.json"];
+  let lastError;
+
+  for (const source of sources) {
+    try {
+      const response = await fetch(source, { cache: "no-store" });
+      if (!response.ok) throw new Error(source + " returned " + response.status);
+      const contentType = response.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) throw new Error(source + " did not return JSON");
+      const data = await response.json();
+      if (!Array.isArray(data.branches) || !Array.isArray(data.unitCollections)) {
+        throw new Error(source + " returned incomplete data");
+      }
+      return data;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Resources could not be loaded");
+}
+
 function initialiseTheme() {
   const stored = localStorage.getItem(STORAGE.theme);
-  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
+  const prefersDark = typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
   setTheme(stored || (prefersDark ? "dark" : "light"));
   elements["theme-toggle"].addEventListener("click", () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
@@ -154,17 +183,10 @@ function bindBrowserControls() {
     chooseBranch(button.dataset.branch);
   });
 
-  elements["branch-select"].addEventListener("change", (event) => chooseBranch(event.target.value));
-
   elements["subject-list"].addEventListener("click", (event) => {
     const button = event.target.closest("[data-subject]");
     if (!button) return;
     state.subject = button.dataset.subject;
-    renderBrowser();
-  });
-
-  elements["subject-select"].addEventListener("change", (event) => {
-    state.subject = event.target.value;
     renderBrowser();
   });
 
@@ -189,7 +211,7 @@ function chooseBranch(branchId) {
 }
 
 function visibleBranches() {
-  const branches = state.data?.branches || [];
+  const branches = state.data && state.data.branches ? state.data.branches : [];
   if (!state.query) return branches;
   return branches.filter((branch) =>
     (branch.name + " " + branch.code).toLowerCase().includes(state.query)
@@ -211,15 +233,6 @@ function renderBrowser() {
     .filter(Boolean);
   if (!subjects.some((subject) => subject.id === state.subject)) state.subject = subjects[0].id;
   const subject = subjects.find((item) => item.id === state.subject);
-
-  elements["branch-select"].innerHTML = branches.map((item) =>
-    '<option value="' + item.id + '" ' + (item.id === branch.id ? "selected" : "") + '>' +
-    escapeHtml(item.name) + '</option>'
-  ).join("");
-  elements["subject-select"].innerHTML = subjects.map((item) =>
-    '<option value="' + item.id + '" ' + (item.id === subject.id ? "selected" : "") + '>' +
-    escapeHtml(item.name) + '</option>'
-  ).join("");
 
   elements["subject-pane-branch"].textContent = branch.name;
   elements["subject-list"].innerHTML = subjects.map((item) => {
@@ -293,7 +306,7 @@ function renderUnit(subject, unit, index) {
   ];
   const ready = materials.filter((material) => material.url).length;
   return '<details class="unit-row" ' + (index === 0 ? "open" : "") + '>' +
-    '<summary><span class="unit-index">' + String(unit.number).padStart(2, "0") + '</span>' +
+    '<summary><span class="unit-index">' + twoDigits(unit.number) + '</span>' +
     '<span class="unit-title"><strong>Unit ' + unit.number + '</strong><small>' + escapeHtml(unit.title) + '</small></span>' +
     '<span class="unit-count">' + ready + ' available</span><span class="chevron" aria-hidden="true"></span></summary>' +
     '<div class="material-list">' + materials.map(renderMaterial).join("") + '</div></details>';
@@ -313,7 +326,7 @@ function renderMaterial(material) {
 
 function renderSyllabi() {
   elements["syllabus-list"].innerHTML = state.data.syllabi.map((item, index) => {
-    const content = '<span class="syllabus-index">' + String(index + 1).padStart(2, "0") + '</span>' +
+    const content = '<span class="syllabus-index">' + twoDigits(index + 1) + '</span>' +
       '<span><strong>' + escapeHtml(item.title) + '</strong><small>' +
       (item.available ? "Official syllabus" : "Not available yet") + '</small></span>' +
       '<i aria-hidden="true">' + (item.available ? "↗" : "—") + '</i>';
@@ -423,7 +436,7 @@ function updateTimer() {
   const minutes = Math.floor(timerSeconds / 60);
   const seconds = timerSeconds % 60;
   elements["timer-value"].textContent =
-    String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+    twoDigits(minutes) + ":" + twoDigits(seconds);
   const elapsed = 25 * 60 - timerSeconds;
   elements["timer-ring"].style.setProperty("--progress", ((elapsed / (25 * 60)) * 100) + "%");
   document.title = timerInterval

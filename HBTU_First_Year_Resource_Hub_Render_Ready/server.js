@@ -25,17 +25,28 @@ app.use(
   })
 );
 app.use(express.json({ limit: "32kb" }));
-app.use(express.static(publicDir, { maxAge: "1h", etag: true }));
+app.use(express.static(publicDir, {
+  maxAge: "1h",
+  etag: true,
+  setHeaders(res, filePath) {
+    const extension = path.extname(filePath).toLowerCase();
+    if ([".html", ".js", ".css", ".json"].includes(extension)) {
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    }
+  },
+}));
 
 function loadResources() {
   return JSON.parse(fs.readFileSync(resourcesPath, "utf8"));
 }
 
 app.get("/api/health", (_req, res) => {
+  res.set("Cache-Control", "no-store");
   res.json({ status: "ok", service: "HelpDesk" });
 });
 
 app.get("/api/resources", (req, res) => {
+  res.set("Cache-Control", "no-store");
   const data = loadResources();
   const query = String(req.query.q || "").trim().toLowerCase();
   const type = String(req.query.type || "all").toLowerCase();
