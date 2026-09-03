@@ -1,8 +1,8 @@
 {
-  "name": "hbtu-first-year-resource-hub",
+  "name": "helpdesk-hbtu",
   "version": "1.0.0",
   "private": true,
-  "description": "A polished, Render-ready resource hub for HBTU first-year students.",
+  "description": "HelpDesk — a premium, Render-ready resource library for HBTU students.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

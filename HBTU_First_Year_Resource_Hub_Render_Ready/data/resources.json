@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "First Year Resource Hub",
+    "title": "HelpDesk",
     "institution": "HBTU",
     "description": "One organised place for first-year syllabi, lectures, notes and previous-year questions.",
     "creators": ["Akshat Shukla", "Priyanshu Dixit"],
@@ -110,7 +110,7 @@
     {
       "id": "ees",
       "name": "Environment & Ecology Studies",
-      "description": "A clean five-unit workspace ready for lectures, notes, PYQs and books as they are collected.",
+      "description": "Environmental foundations, ecology and sustainability.",
       "accent": "green",
       "lectureUrl": null,
       "notesUrl": null,
@@ -125,7 +125,7 @@
     {
       "id": "workshop",
       "name": "Central Workshop Practice",
-      "description": "Five unit folders for practical material, workshop notes, viva questions and recommended books.",
+      "description": "Practical material, workshop notes and viva preparation.",
       "accent": "rose",
       "lectureUrl": null,
       "notesUrl": "https://college-study.netlify.app/first-semester",
@@ -140,7 +140,7 @@
     {
       "id": "food-tech",
       "name": "Food Technology Core",
-      "description": "A dedicated five-unit home for faculty material, notes, exam papers and future book PDFs.",
+      "description": "Faculty material, notes, exam papers and recommended reading.",
       "accent": "teal",
       "lectureUrl": null,
       "notesUrl": null,
@@ -200,8 +200,8 @@
   "subjects": [
     {
       "id": "chemistry",
-      "name": "Engineering Chemistry",
-      "shortName": "Engineering Chemistry",
+      "name": "Chemistry",
+      "shortName": "Chemistry",
       "icon": "flask",
       "accent": "violet",
       "description": "Theory and laboratory foundations, from kinetics to spectroscopy.",
@@ -260,7 +260,7 @@
           "type": "pyq",
           "title": "Chemistry Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#resources",
+          "url": "#unit-vault",
           "available": true
         },
         {
@@ -303,7 +303,7 @@
           "type": "pyq",
           "title": "PC Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#resources",
+          "url": "#unit-vault",
           "available": true
         },
         {
@@ -319,7 +319,7 @@
     {
       "id": "bem",
       "name": "Engineering Mechanics",
-      "shortName": "Engineering Mechanics",
+      "shortName": "BEM & Tutorial",
       "icon": "gear",
       "accent": "orange",
       "description": "Core mechanics concepts, tutorial support and exam practice.",
@@ -346,7 +346,7 @@
           "type": "pyq",
           "title": "Mechanics Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#resources",
+          "url": "#unit-vault",
           "available": true
         },
         {
@@ -389,7 +389,7 @@
     {
       "id": "bet",
       "name": "Basic Electronics Engineering",
-      "shortName": "Basic Electronics",
+      "shortName": "BET & Tutorial",
       "icon": "bolt",
       "accent": "yellow",
       "description": "Electronic devices, circuits and tutorial resources.",
@@ -416,7 +416,7 @@
           "type": "pyq",
           "title": "Electronics Unit-wise PYQs",
           "description": "Open the five-unit PDF collection",
-          "url": "#resources",
+          "url": "#unit-vault",
           "available": true
         },
         {

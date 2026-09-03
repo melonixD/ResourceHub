@@ -32,7 +32,7 @@ function loadResources() {
 }
 
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", service: "HBTU First Year Resource Hub" });
+  res.json({ status: "ok", service: "HelpDesk" });
 });
 
 app.get("/api/resources", (req, res) => {
@@ -67,7 +67,7 @@ app.use((error, _req, res, _next) => {
 
 if (require.main === module) {
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`First Year Resource Hub running on port ${PORT}`);
+    console.log(`HelpDesk running on port ${PORT}`);
   });
 }
 

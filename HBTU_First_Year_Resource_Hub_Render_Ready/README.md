@@ -1,28 +1,24 @@
-# HBTU First Year Resource Hub
+# HelpDesk
 
-A calm, Apple-inspired student portal for first-year syllabi, lectures, notes and previous-year questions. Built with a lightweight Node.js backend and a dependency-free JavaScript frontend so it is easy to upload to GitHub and deploy on Render.
+HelpDesk is a clean, branch-first resource library for HBTU juniors. It uses a lightweight Node.js backend and dependency-free JavaScript frontend, and is ready to deploy on Render.
 
 ## What is included
 
-- Branch-first explorer: branch → subject → unit → resource
-- All 13 current HBTU B.Tech branches, including Mechanical and Electrical Engineering
-- Minimal system typography, neutral surfaces and responsive light/dark themes
-- Seven subject areas, each organised into five unit folders
-- Search by subject name or unit
-- Lectures, notes, PYQs and recommended-books slots inside every unit
-- 20 separated PDFs that open directly in the browser
-- Syllabus centre with live Google Drive links
-- Clear “coming soon” states instead of broken links
-- Personal study-task list stored on the device
-- 25-minute focus timer
-- Light and dark themes
-- Fully responsive mobile navigation
-- Security headers, health endpoint and Render configuration
+- 13 engineering branches in a focused three-pane browser
+- 7 first-year subjects, each organised into Units 1–5
+- Lectures, Notes, PYQs and Books inside every unit
+- 20 separated unit-wise PYQ PDFs that open in the browser
+- Official syllabus links
+- Mobile-friendly branch and subject dropdowns with no sideways scrolling
+- Local study list and 25-minute focus timer inside the hamburger panel
+- Help and contact section with profile photos and revealable WhatsApp details
+- Responsive light and dark themes
+- Render Blueprint configuration and health endpoint
 
 ## Run locally
 
 1. Install [Node.js 20 or newer](https://nodejs.org/).
-2. Open Terminal inside this project folder.
+2. Open a terminal in this project folder.
 3. Run:
 
 ```bash
@@ -32,25 +28,18 @@ npm start
 
 4. Open `http://localhost:3000`.
 
-For development with automatic server restarts:
-
-```bash
-npm run dev
-```
-
 ## Deploy on Render
 
-### Option A — Blueprint (easiest)
+### Blueprint
 
-1. Upload the **contents of this folder** to the root of a GitHub repository. `package.json`, `server.js`, `public`, `data` and `render.yaml` must be visible at the repository root.
-2. In Render, choose **New + → Blueprint**.
-3. Connect the repository.
-4. Render detects `render.yaml`; approve the service and deploy.
+1. Upload the **contents of this folder** to the root of your GitHub repository.
+2. Confirm `render.yaml`, `package.json`, `server.js`, `public`, and `data` are visible on the `main` branch—not inside another folder.
+3. In Render, choose **New + → Blueprint** and connect the repository.
+4. Render will detect `render.yaml`; approve the `helpdesk-hbtu` service and deploy.
 
-### Option B — Web Service
+### Web Service
 
-1. In Render, choose **New + → Web Service** and connect the repository.
-2. Use these settings:
+Use these settings if you prefer to create a Web Service manually:
 
 | Setting | Value |
 | --- | --- |
@@ -59,42 +48,29 @@ npm run dev
 | Start command | `npm start` |
 | Health check path | `/api/health` |
 
-No environment variables or database are required.
+No database or environment variables are required.
 
 ## Update resources
 
-All subject, syllabus and link content lives in `data/resources.json`. Keep this structure when adding a resource:
+The navigation and resource links live in `data/resources.json`:
 
-```json
-{
-  "id": "unique-resource-id",
-  "type": "lecture",
-  "title": "Resource title",
-  "description": "Short student-friendly description",
-  "url": "https://example.com/resource",
-  "available": true
-}
-```
+- `branches` controls the engineering branch list and which subjects appear in each branch.
+- `unitCollections` controls each subject's five units and its lecture, notes, PYQ, and book links.
+- `syllabi` controls the official syllabus section.
 
-Supported types are `lecture`, `notes`, `pyq` and `book`. For an upcoming resource, use `null` for the URL and set `available` to `false`.
+Add a resource URL to an individual unit when it is unit-specific, or to the subject collection when one link should appear in every unit. Use `null` for material that is not available yet.
 
 ## Project structure
 
 ```text
 first-year-resource-hub/
-├── data/
-│   └── resources.json
+├── data/resources.json
 ├── public/
 │   ├── app.js
-│   ├── favicon.svg
 │   ├── index.html
-│   ├── resources/pyqs/        # Browser-viewable unit PDFs
-│   └── styles.css
-├── test/
-│   └── server.test.js
-├── .env.example
-├── .gitignore
-├── LICENSE
+│   ├── premium.css
+│   └── resources/pyqs/   # 20 browser-viewable PDFs
+├── test/server.test.js
 ├── package.json
 ├── render.yaml
 └── server.js
@@ -103,13 +79,7 @@ first-year-resource-hub/
 ## API
 
 - `GET /api/health` — deployment health check
-- `GET /api/resources` — all hub content
-- `GET /api/resources?q=kinetics&type=lecture&subject=chemistry` — filtered content
+- `GET /api/resources` — complete HelpDesk content
+- `GET /api/resources?q=spectroscopy&type=lecture&subject=chemistry` — optional filtered legacy resource response
 
-## Credits
-
-Made with care for HBTU juniors by **Akshat Shukla** and **Priyanshu Dixit**.
-
-## Licence
-
-MIT
+Made for HBTU juniors by **Akshat Shukla** and **Priyanshu Dixit**. Licensed under MIT.

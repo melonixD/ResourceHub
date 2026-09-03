@@ -1,35 +1,40 @@
 const STORAGE = {
-  theme: "fyhub-theme",
-  tasks: "fyhub-tasks",
+  theme: "helpdesk-theme",
+  tasks: "helpdesk-tasks",
 };
 
 const state = {
   data: null,
   branch: "mechanical",
-  librarySubject: "chemistry",
+  subject: "chemistry",
   query: "",
   tasks: readStorage(STORAGE.tasks, []),
 };
 
-const subjectEmoji = {
-  chemistry: "🧪",
-  pc: "🗣️",
-  bem: "⚙️",
-  ees: "🌿",
-  bet: "⚡",
-  workshop: "🛠️",
-  "food-tech": "🍞",
+const subjectCodes = {
+  chemistry: "CH",
+  pc: "PC",
+  bem: "BEM",
+  ees: "EES",
+  bet: "BET",
+  workshop: "CWP",
+  "food-tech": "FT",
+};
+
+const materialIcons = {
+  lecture: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5Z" /></svg>',
+  notes: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg>',
+  pyq: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7zM15 3v5h4M10 12h6M10 16h5" /></svg>',
+  book: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H12v18H7.5A3.5 3.5 0 0 0 4 23zM20 5.5A3.5 3.5 0 0 0 16.5 2H12v18h4.5A3.5 3.5 0 0 1 20 23z" /></svg>',
 };
 
 const elements = {};
-let toastTimeout;
 let timerSeconds = 25 * 60;
 let timerInterval = null;
 
 function readStorage(key, fallback) {
   try {
-    const value = JSON.parse(localStorage.getItem(key));
-    return value ?? fallback;
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
   } catch {
     return fallback;
   }
@@ -50,14 +55,11 @@ function escapeHtml(value) {
 
 function cacheElements() {
   [
-    "theme-toggle", "menu-toggle", "mobile-menu", "branch-search", "library-branch-count",
-    "library-branch-list", "library-branch-breadcrumb", "library-subject-breadcrumb",
-    "library-branch-name", "library-branch-status", "branch-subject-list", "library-course-icon",
-    "library-course-name", "library-course-description", "library-course-status", "library-unit-list", "syllabus-list",
-    "available-count", "hero-resource-count",
-    "snapshot-pdf-badge", "library-coverage-bar", "snapshot-subjects", "snapshot-units",
-    "snapshot-pdfs", "task-form", "task-input", "task-list", "task-empty", "today-label",
-    "timer-value", "timer-toggle", "timer-reset", "timer-ring", "toast",
+    "theme-toggle", "menu-toggle", "mobile-menu", "menu-backdrop", "available-count", "branch-count",
+    "branch-search", "branch-select", "branch-list", "subject-pane-branch", "subject-select", "subject-list", "path-branch",
+    "path-subject", "subject-code", "course-name", "course-description", "course-status",
+    "unit-list", "syllabus-list", "today-label", "task-form", "task-input", "task-list",
+    "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
 }
 
@@ -65,32 +67,29 @@ async function initialise() {
   cacheElements();
   initialiseTheme();
   initialiseNavigation();
+  initialiseContacts();
   initialisePlanner();
   initialiseTimer();
-  initialiseRevealAnimations();
-  bindGlobalShortcuts();
-  bindLibraryControls();
+  bindBrowserControls();
 
   try {
     const response = await fetch("/api/resources");
     if (!response.ok) throw new Error("Resource request failed");
     state.data = await response.json();
-    renderLibrary();
+    renderBrowser();
     renderSyllabi();
-    updateLibraryStats();
+    updateStats();
   } catch (error) {
     console.error(error);
-    elements["library-unit-list"].innerHTML = `
-      <div class="empty-state"><span>↻</span><h3>Library could not load</h3>
-      <p>Please refresh the page in a moment.</p></div>`;
+    elements["unit-list"].innerHTML =
+      '<div class="empty-state"><h3>Resources unavailable</h3><p>Please refresh the page.</p></div>';
   }
 }
 
 function initialiseTheme() {
   const stored = localStorage.getItem(STORAGE.theme);
-  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
   setTheme(stored || (prefersDark ? "dark" : "light"));
-
   elements["theme-toggle"].addEventListener("click", () => {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     setTheme(next);
@@ -100,244 +99,253 @@ function initialiseTheme() {
 
 function setTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  const icon = elements["theme-toggle"].querySelector(".theme-icon");
-  icon.textContent = theme === "dark" ? "☀" : "☾";
-  elements["theme-toggle"].setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} theme`);
+  document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#000000" : "#f5f5f7";
+  elements["theme-toggle"].setAttribute(
+    "aria-label",
+    "Switch to " + (theme === "dark" ? "light" : "dark") + " theme"
+  );
 }
 
 function initialiseNavigation() {
-  const header = document.querySelector(".site-header");
-  const updateHeader = () => header.classList.toggle("scrolled", window.scrollY > 12);
-  window.addEventListener("scroll", updateHeader, { passive: true });
-  updateHeader();
-
   elements["menu-toggle"].addEventListener("click", () => {
     const open = elements["menu-toggle"].getAttribute("aria-expanded") !== "true";
-    elements["menu-toggle"].setAttribute("aria-expanded", String(open));
-    elements["mobile-menu"].classList.toggle("open", open);
-    elements["mobile-menu"].setAttribute("aria-hidden", String(!open));
-    document.body.classList.toggle("menu-open", open);
+    setMenu(open);
+  });
+  elements["menu-backdrop"].addEventListener("click", closeMenu);
+  elements["mobile-menu"].querySelectorAll(".drawer-nav a").forEach((link) => link.addEventListener("click", closeMenu));
+}
+
+function setMenu(open) {
+  elements["menu-toggle"].setAttribute("aria-expanded", String(open));
+  elements["menu-toggle"].setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  elements["mobile-menu"].classList.toggle("open", open);
+  elements["mobile-menu"].setAttribute("aria-hidden", String(!open));
+  elements["menu-backdrop"].classList.toggle("open", open);
+  elements["menu-backdrop"].setAttribute("aria-hidden", String(!open));
+  document.body.classList.toggle("menu-open", open);
+}
+
+function closeMenu() {
+  setMenu(false);
+}
+
+function initialiseContacts() {
+  document.querySelectorAll("[data-contact-trigger]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const panel = document.getElementById(button.getAttribute("aria-controls"));
+      const open = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!open));
+      button.querySelector("small").textContent = open ? "Tap to show WhatsApp" : "WhatsApp contact";
+      button.querySelector(".profile-arrow").textContent = open ? "＋" : "−";
+      panel.hidden = open;
+    });
+  });
+}
+
+function bindBrowserControls() {
+  elements["branch-search"].addEventListener("input", (event) => {
+    state.query = event.target.value.trim().toLowerCase();
+    renderBranches();
   });
 
-  elements["mobile-menu"].querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMobileMenu));
-}
+  elements["branch-list"].addEventListener("click", (event) => {
+    const button = event.target.closest("[data-branch]");
+    if (!button) return;
+    chooseBranch(button.dataset.branch);
+  });
 
-function closeMobileMenu() {
-  elements["menu-toggle"].setAttribute("aria-expanded", "false");
-  elements["mobile-menu"].classList.remove("open");
-  elements["mobile-menu"].setAttribute("aria-hidden", "true");
-  document.body.classList.remove("menu-open");
-}
+  elements["branch-select"].addEventListener("change", (event) => chooseBranch(event.target.value));
 
-function initialiseRevealAnimations() {
-  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  const items = [...document.querySelectorAll(".reveal")];
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    items.forEach((item) => item.classList.add("visible"));
-    return;
-  }
+  elements["subject-list"].addEventListener("click", (event) => {
+    const button = event.target.closest("[data-subject]");
+    if (!button) return;
+    state.subject = button.dataset.subject;
+    renderBrowser();
+  });
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const delay = Number(entry.target.dataset.delay || 0);
-      window.setTimeout(() => entry.target.classList.add("visible"), delay);
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.12 });
-  items.forEach((item) => observer.observe(item));
-}
+  elements["subject-select"].addEventListener("change", (event) => {
+    state.subject = event.target.value;
+    renderBrowser();
+  });
 
-function bindGlobalShortcuts() {
   document.addEventListener("keydown", (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
       document.getElementById("resources").scrollIntoView({ behavior: "smooth" });
-      window.setTimeout(() => elements["branch-search"].focus(), 420);
+      elements["branch-search"].focus();
     }
     if (event.key === "Escape") {
       elements["branch-search"].blur();
-      closeMobileMenu();
+      closeMenu();
     }
   });
 }
 
-function bindLibraryControls() {
-  elements["branch-search"].addEventListener("input", (event) => {
-    state.query = event.target.value.trim().toLowerCase();
-    renderLibrary();
-  });
-
-  elements["library-branch-list"].addEventListener("click", (event) => {
-    const button = event.target.closest("[data-library-branch]");
-    if (!button) return;
-    state.branch = button.dataset.libraryBranch;
-    const branch = state.data.branches.find((item) => item.id === state.branch);
-    if (!branch.subjectIds.includes(state.librarySubject)) state.librarySubject = branch.subjectIds[0];
-    renderLibrary();
-  });
-
-  elements["branch-subject-list"].addEventListener("click", (event) => {
-    const button = event.target.closest("[data-branch-subject]");
-    if (!button) return;
-    state.librarySubject = button.dataset.branchSubject;
-    renderLibrary();
-  });
+function chooseBranch(branchId) {
+  state.branch = branchId;
+  const branch = state.data.branches.find((item) => item.id === state.branch);
+  if (!branch.subjectIds.includes(state.subject)) state.subject = branch.subjectIds[0];
+  renderBrowser();
 }
 
-function countCollectionPdfs(collection) {
+function visibleBranches() {
+  const branches = state.data?.branches || [];
+  if (!state.query) return branches;
+  return branches.filter((branch) =>
+    (branch.name + " " + branch.code).toLowerCase().includes(state.query)
+  );
+}
+
+function countPdfs(collection) {
   return collection.units.filter((unit) => Boolean(unit.pyqUrl)).length;
 }
 
-function renderLibrary() {
-  const branches = state.data?.branches || [];
-  const collections = state.data?.unitCollections || [];
-  const visibleBranches = branches.filter((branch) => !state.query || `${branch.name} ${branch.code}`.toLowerCase().includes(state.query));
-  elements["library-branch-count"].textContent = String(visibleBranches.length).padStart(2, "0");
-
-  if (!visibleBranches.length) {
-    elements["library-branch-list"].innerHTML = `<div class="subject-empty">No matching branch</div>`;
-    elements["library-unit-list"].innerHTML = `
-      <div class="empty-state"><span>⌕</span><h3>No matching branch</h3>
-      <p>Try “Mechanical”, “Electrical” or “Food Technology”.</p></div>`;
-    return;
-  }
-
-  if (!visibleBranches.some((branch) => branch.id === state.branch)) {
-    state.branch = visibleBranches[0].id;
-  }
-  const selectedBranch = branches.find((branch) => branch.id === state.branch);
-  const branchCollections = selectedBranch.subjectIds
-    .map((subjectId) => collections.find((collection) => collection.id === subjectId))
+function renderBrowser() {
+  renderBranches();
+  const branches = state.data.branches;
+  const collections = state.data.unitCollections;
+  const branch = branches.find((item) => item.id === state.branch) || branches[0];
+  state.branch = branch.id;
+  const subjects = branch.subjectIds
+    .map((id) => collections.find((collection) => collection.id === id))
     .filter(Boolean);
-  if (!branchCollections.some((collection) => collection.id === state.librarySubject)) {
-    state.librarySubject = branchCollections[0].id;
-  }
-  const selected = branchCollections.find((collection) => collection.id === state.librarySubject);
+  if (!subjects.some((subject) => subject.id === state.subject)) state.subject = subjects[0].id;
+  const subject = subjects.find((item) => item.id === state.subject);
 
-  elements["library-branch-list"].innerHTML = visibleBranches.map((branch) => {
-    return `
-      <button class="library-subject ${branch.id === selectedBranch.id ? "active" : ""}" data-library-branch="${branch.id}" type="button">
-        <span class="library-subject-icon branch-code" aria-hidden="true">${escapeHtml(branch.code)}</span>
-        <span class="library-subject-copy"><strong>${escapeHtml(branch.name)}</strong><small>${branch.subjectIds.length} first-year subjects</small></span>
-        <span class="library-subject-arrow" aria-hidden="true">›</span>
-      </button>`;
+  elements["branch-select"].innerHTML = branches.map((item) =>
+    '<option value="' + item.id + '" ' + (item.id === branch.id ? "selected" : "") + '>' +
+    escapeHtml(item.name) + '</option>'
+  ).join("");
+  elements["subject-select"].innerHTML = subjects.map((item) =>
+    '<option value="' + item.id + '" ' + (item.id === subject.id ? "selected" : "") + '>' +
+    escapeHtml(item.name) + '</option>'
+  ).join("");
+
+  elements["subject-pane-branch"].textContent = branch.name;
+  elements["subject-list"].innerHTML = subjects.map((item) => {
+    return '<button class="subject-item ' + (item.id === subject.id ? "active" : "") +
+      '" data-subject="' + item.id + '" type="button">' +
+      '<span class="subject-monogram">' + escapeHtml(subjectCodes[item.id] || item.name.slice(0, 2)) + '</span>' +
+      '<span><strong>' + escapeHtml(item.name) + '</strong><small>' + item.units.length + ' units</small></span>' +
+      '<i aria-hidden="true">›</i></button>';
   }).join("");
 
-  elements["library-branch-breadcrumb"].textContent = selectedBranch.name;
-  elements["library-subject-breadcrumb"].textContent = selected.name;
-  elements["library-branch-name"].textContent = selectedBranch.name;
-  elements["library-branch-status"].textContent = `${branchCollections.length} subjects`;
-  elements["branch-subject-list"].innerHTML = branchCollections.map((collection) => `
-    <button class="branch-subject ${collection.id === selected.id ? "active" : ""}" data-branch-subject="${collection.id}" type="button">
-      <span aria-hidden="true">${subjectEmoji[collection.id] || "•"}</span>${escapeHtml(collection.name)}
-    </button>
-  `).join("");
-  elements["library-course-icon"].textContent = subjectEmoji[selected.id] || "•";
-  elements["library-course-name"].textContent = selected.name;
-  elements["library-course-description"].textContent = selected.description;
-  const pdfCount = countCollectionPdfs(selected);
-  elements["library-course-status"].textContent = pdfCount
-    ? `${selected.units.length} units · ${pdfCount} PDFs ready`
-    : `${selected.units.length} unit folders ready`;
-  elements["library-unit-list"].dataset.accent = selected.accent;
-  elements["library-unit-list"].innerHTML = selected.units.map((unit, index) => renderUnit(selected, unit, index)).join("");
+  elements["path-branch"].textContent = branch.name;
+  elements["path-subject"].textContent = subject.name;
+  elements["subject-code"].textContent = subjectCodes[subject.id] || subject.name.slice(0, 2).toUpperCase();
+  elements["course-name"].textContent = subject.name;
+  elements["course-description"].textContent = subject.description;
+  const pdfCount = countPdfs(subject);
+  elements["course-status"].textContent = subject.units.length + " units" + (pdfCount ? " · " + pdfCount + " PDFs" : "");
+  elements["unit-list"].innerHTML = subject.units.map((unit, index) => renderUnit(subject, unit, index)).join("");
 
-  elements["library-unit-list"].querySelectorAll("details").forEach((details) => {
+  elements["unit-list"].querySelectorAll("details").forEach((details) => {
     details.addEventListener("toggle", () => {
       if (!details.open) return;
-      elements["library-unit-list"].querySelectorAll("details[open]").forEach((other) => {
+      elements["unit-list"].querySelectorAll("details[open]").forEach((other) => {
         if (other !== details) other.open = false;
       });
     });
   });
 }
 
-function renderUnit(collection, unit, index) {
+function renderBranches() {
+  const branches = visibleBranches();
+  elements["branch-count"].textContent = String(branches.length);
+  if (!branches.length) {
+    elements["branch-list"].innerHTML = '<p class="no-results">No branch found</p>';
+    return;
+  }
+  elements["branch-list"].innerHTML = branches.map((branch) => {
+    return '<button class="branch-item ' + (branch.id === state.branch ? "active" : "") +
+      '" data-branch="' + branch.id + '" type="button">' +
+      '<span class="branch-code">' + escapeHtml(branch.code) + '</span>' +
+      '<span>' + escapeHtml(branch.name) + '</span><i aria-hidden="true">›</i></button>';
+  }).join("");
+}
+
+function renderUnit(subject, unit, index) {
   const materials = [
     {
-      icon: "▶", title: "Lectures",
-      description: unit.lectureUrl || collection.lectureUrl ? "Open the unit playlist" : "Playlist coming soon",
-      url: unit.lectureUrl || collection.lectureUrl,
+      type: "lecture",
+      title: "Lectures",
+      description: unit.lectureUrl || subject.lectureUrl ? "Video playlist" : "Not added yet",
+      url: unit.lectureUrl || subject.lectureUrl,
     },
     {
-      icon: "≡", title: "Notes",
-      description: unit.notesUrl || collection.notesUrl ? "Open the notes collection" : "Unit notes coming soon",
-      url: unit.notesUrl || collection.notesUrl,
+      type: "notes",
+      title: "Notes",
+      description: unit.notesUrl || subject.notesUrl ? "Study notes" : "Not added yet",
+      url: unit.notesUrl || subject.notesUrl,
     },
     {
-      icon: "✓", title: "PYQs",
-      description: unit.pyqUrl ? `View only Unit ${unit.number} questions` : "Unit PYQs coming soon",
+      type: "pyq",
+      title: "PYQs",
+      description: unit.pyqUrl ? "Unit " + unit.number + " question paper" : "Not added yet",
       url: unit.pyqUrl,
-      featured: true,
     },
     {
-      icon: "▤", title: "Books",
-      description: unit.bookUrl || collection.booksUrl ? "Open recommended books" : "Recommended books coming soon",
-      url: unit.bookUrl || collection.booksUrl,
+      type: "book",
+      title: "Books",
+      description: unit.bookUrl || subject.booksUrl ? "Recommended reading" : "Not added yet",
+      url: unit.bookUrl || subject.booksUrl,
     },
   ];
-  const readyCount = materials.filter((material) => material.url).length;
-
-  return `
-    <details class="unit-card" ${index === 0 ? "open" : ""}>
-      <summary>
-        <span class="folder-icon" aria-hidden="true"><i></i></span>
-        <span class="unit-summary-copy"><strong>Unit ${unit.number}</strong><small>${escapeHtml(unit.title)}</small></span>
-        <span class="unit-ready"><b>${readyCount} available</b><i aria-hidden="true">+</i></span>
-      </summary>
-      <div class="unit-material-grid">
-        ${materials.map((material) => renderMaterial(material)).join("")}
-      </div>
-    </details>`;
+  const ready = materials.filter((material) => material.url).length;
+  return '<details class="unit-row" ' + (index === 0 ? "open" : "") + '>' +
+    '<summary><span class="unit-index">' + String(unit.number).padStart(2, "0") + '</span>' +
+    '<span class="unit-title"><strong>Unit ' + unit.number + '</strong><small>' + escapeHtml(unit.title) + '</small></span>' +
+    '<span class="unit-count">' + ready + ' available</span><span class="chevron" aria-hidden="true"></span></summary>' +
+    '<div class="material-list">' + materials.map(renderMaterial).join("") + '</div></details>';
 }
 
 function renderMaterial(material) {
-  const body = `
-    <span class="unit-material-icon" aria-hidden="true">${material.icon}</span>
-    <span class="unit-material-copy"><strong>${escapeHtml(material.title)}</strong><small>${escapeHtml(material.description)}</small></span>
-    <b class="unit-material-action">${material.url ? "Open" : "Soon"}<span aria-hidden="true">${material.url ? "↗" : ""}</span></b>`;
+  const content = '<span class="material-icon">' + materialIcons[material.type] + '</span>' +
+    '<span class="material-copy"><strong>' + escapeHtml(material.title) + '</strong><small>' +
+    escapeHtml(material.description) + '</small></span>' +
+    '<span class="material-action">' + (material.url ? "Open" : "Soon") +
+    (material.url ? '<i aria-hidden="true">↗</i>' : "") + '</span>';
   return material.url
-    ? `<a class="unit-material ${material.featured ? "featured" : ""}" href="${escapeHtml(material.url)}" target="_blank" rel="noopener noreferrer">${body}</a>`
-    : `<div class="unit-material disabled" aria-disabled="true">${body}</div>`;
-}
-
-function updateLibraryStats() {
-  const collections = state.data?.unitCollections || [];
-  const unitCount = collections.reduce((total, collection) => total + collection.units.length, 0);
-  const pdfCount = collections.reduce((total, collection) => total + countCollectionPdfs(collection), 0);
-  const coverage = unitCount ? Math.round((pdfCount / unitCount) * 100) : 0;
-
-  elements["available-count"].textContent = String(pdfCount).padStart(2, "0");
-  elements["hero-resource-count"].textContent = `${pdfCount} unit PDFs · ${collections.length} subjects`;
-  elements["snapshot-pdf-badge"].textContent = `${pdfCount} PDFs`;
-  elements["library-coverage-bar"].style.width = `${coverage}%`;
-  elements["snapshot-subjects"].textContent = collections.length;
-  elements["snapshot-units"].textContent = unitCount;
-  elements["snapshot-pdfs"].textContent = pdfCount;
+    ? '<a class="material-item" href="' + escapeHtml(material.url) +
+      '" target="_blank" rel="noopener noreferrer">' + content + '</a>'
+    : '<div class="material-item unavailable" aria-disabled="true">' + content + '</div>';
 }
 
 function renderSyllabi() {
   elements["syllabus-list"].innerHTML = state.data.syllabi.map((item, index) => {
-    const body = `
-      <span class="syllabus-number">${String(index + 1).padStart(2, "0")}</span>
-      <p><strong>${escapeHtml(item.title)}</strong><small>${item.available ? "Official syllabus · PDF" : "Will be updated shortly"}</small></p>
-      <span aria-hidden="true">${item.available ? "↗" : "···"}</span>`;
+    const content = '<span class="syllabus-index">' + String(index + 1).padStart(2, "0") + '</span>' +
+      '<span><strong>' + escapeHtml(item.title) + '</strong><small>' +
+      (item.available ? "Official syllabus" : "Not available yet") + '</small></span>' +
+      '<i aria-hidden="true">' + (item.available ? "↗" : "—") + '</i>';
     return item.available
-      ? `<a class="syllabus-item" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${body}</a>`
-      : `<div class="syllabus-item disabled">${body}</div>`;
+      ? '<a class="syllabus-item" href="' + escapeHtml(item.url) +
+        '" target="_blank" rel="noopener noreferrer">' + content + '</a>'
+      : '<div class="syllabus-item unavailable">' + content + '</div>';
   }).join("");
 }
 
+function updateStats() {
+  const pdfCount = state.data.unitCollections.reduce((total, subject) => total + countPdfs(subject), 0);
+  elements["available-count"].textContent = String(pdfCount);
+}
+
 function initialisePlanner() {
-  elements["today-label"].textContent = new Intl.DateTimeFormat("en-IN", { weekday: "short", day: "numeric", month: "short" }).format(new Date());
+  elements["today-label"].textContent = new Intl.DateTimeFormat("en-IN", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  }).format(new Date());
   renderTasks();
 
   elements["task-form"].addEventListener("submit", (event) => {
     event.preventDefault();
     const title = elements["task-input"].value.trim();
     if (!title) return;
-    state.tasks.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, title, done: false });
+    state.tasks.unshift({
+      id: String(Date.now()) + "-" + Math.random().toString(16).slice(2),
+      title,
+      done: false,
+    });
     elements["task-input"].value = "";
     persistTasks();
     renderTasks();
@@ -367,17 +375,16 @@ function persistTasks() {
 
 function renderTasks() {
   elements["task-empty"].hidden = state.tasks.length > 0;
-  elements["task-list"].innerHTML = state.tasks.map((task) => `
-    <label class="task-item ${task.done ? "done" : ""}">
-      <input type="checkbox" data-task-toggle="${task.id}" ${task.done ? "checked" : ""} />
-      <span>${escapeHtml(task.title)}</span>
-      <button type="button" data-task-delete="${task.id}" aria-label="Delete task">×</button>
-    </label>
-  `).join("");
+  elements["task-list"].innerHTML = state.tasks.map((task) => {
+    return '<label class="task-item ' + (task.done ? "done" : "") + '">' +
+      '<input type="checkbox" data-task-toggle="' + task.id + '" ' + (task.done ? "checked" : "") + ' />' +
+      '<span>' + escapeHtml(task.title) + '</span>' +
+      '<button type="button" data-task-delete="' + task.id + '" aria-label="Delete task">×</button></label>';
+  }).join("");
 }
 
 function initialiseTimer() {
-  updateTimerDisplay();
+  updateTimer();
   elements["timer-toggle"].addEventListener("click", () => {
     if (timerInterval) pauseTimer();
     else startTimer();
@@ -389,46 +396,39 @@ function startTimer() {
   if (timerSeconds <= 0) timerSeconds = 25 * 60;
   timerInterval = window.setInterval(() => {
     timerSeconds -= 1;
-    updateTimerDisplay();
-    if (timerSeconds <= 0) {
-      pauseTimer();
-      showToast("Focus session complete. Take a short break!");
-    }
+    updateTimer();
+    if (timerSeconds <= 0) pauseTimer(true);
   }, 1000);
   elements["timer-toggle"].textContent = "Pause";
-  document.querySelector(".status-dot").textContent = "Focusing";
+  elements["timer-status"].textContent = "Focusing";
 }
 
-function pauseTimer() {
+function pauseTimer(complete = false) {
   window.clearInterval(timerInterval);
   timerInterval = null;
-  elements["timer-toggle"].textContent = timerSeconds === 0 ? "Start again" : "Resume";
-  document.querySelector(".status-dot").textContent = timerSeconds === 0 ? "Complete" : "Paused";
+  elements["timer-toggle"].textContent = complete ? "Start again" : "Resume";
+  elements["timer-status"].textContent = complete ? "Complete" : "Paused";
 }
 
 function resetTimer() {
   window.clearInterval(timerInterval);
   timerInterval = null;
   timerSeconds = 25 * 60;
-  elements["timer-toggle"].textContent = "Start focus";
-  document.querySelector(".status-dot").textContent = "Ready";
-  updateTimerDisplay();
+  elements["timer-toggle"].textContent = "Start";
+  elements["timer-status"].textContent = "Ready";
+  updateTimer();
 }
 
-function updateTimerDisplay() {
+function updateTimer() {
   const minutes = Math.floor(timerSeconds / 60);
   const seconds = timerSeconds % 60;
-  elements["timer-value"].textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  elements["timer-value"].textContent =
+    String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
   const elapsed = 25 * 60 - timerSeconds;
-  elements["timer-ring"].style.setProperty("--timer-progress", `${(elapsed / (25 * 60)) * 360}deg`);
-  document.title = timerInterval ? `${elements["timer-value"].textContent} · Focus` : "First Year Resource Hub · HBTU";
-}
-
-function showToast(message) {
-  window.clearTimeout(toastTimeout);
-  elements.toast.textContent = message;
-  elements.toast.classList.add("show");
-  toastTimeout = window.setTimeout(() => elements.toast.classList.remove("show"), 2500);
+  elements["timer-ring"].style.setProperty("--progress", ((elapsed / (25 * 60)) * 100) + "%");
+  document.title = timerInterval
+    ? elements["timer-value"].textContent + " · HelpDesk"
+    : "HelpDesk · HBTU";
 }
 
 document.addEventListener("DOMContentLoaded", initialise);

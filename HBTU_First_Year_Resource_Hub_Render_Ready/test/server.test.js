@@ -23,7 +23,9 @@ test.after(async () => {
 test("health endpoint reports ok", async () => {
   const response = await fetch(`${baseUrl}/api/health`);
   assert.equal(response.status, 200);
-  assert.equal((await response.json()).status, "ok");
+  const health = await response.json();
+  assert.equal(health.status, "ok");
+  assert.equal(health.service, "HelpDesk");
 });
 
 test("resource endpoint returns seven subjects", async () => {
@@ -31,15 +33,6 @@ test("resource endpoint returns seven subjects", async () => {
   const data = await response.json();
   assert.equal(response.status, 200);
   assert.equal(data.subjects.length, 7);
-});
-
-test("resource library starts with all thirteen HBTU branches", async () => {
-  const response = await fetch(`${baseUrl}/api/resources`);
-  const data = await response.json();
-  assert.equal(data.branches.length, 13);
-  assert.ok(data.branches.some((branch) => branch.name === "Mechanical Engineering"));
-  assert.ok(data.branches.some((branch) => branch.name === "Electrical Engineering"));
-  assert.ok(data.branches.every((branch) => branch.subjectIds.length >= 6));
 });
 
 test("resource filters narrow results", async () => {
@@ -58,28 +51,24 @@ test("every subject includes a recommended books section", async () => {
   assert.ok(data.subjects.every((subject) => subject.resources[0].type === "book"));
 });
 
-test("academic library exposes seven subjects and thirty-five unit folders", async () => {
+test("library exposes thirteen branches and seven unit-based subjects", async () => {
   const response = await fetch(`${baseUrl}/api/resources`);
   const data = await response.json();
+  assert.equal(data.branches.length, 13);
   assert.equal(data.unitCollections.length, 7);
   assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 35);
-  assert.equal(
-    data.unitCollections.reduce((total, subject) => total + subject.units.filter((unit) => unit.pyqUrl).length, 0),
-    20
-  );
+  assert.ok(data.branches.some((branch) => branch.name === "Mechanical Engineering"));
+  assert.ok(data.branches.some((branch) => branch.name === "Electrical Engineering"));
 });
 
-test("branch-first library keeps lectures, notes, PYQs and books inside units", async () => {
-  const response = await fetch(`${baseUrl}/`);
-  const html = await response.text();
-  const script = await (await fetch(`${baseUrl}/app.js`)).text();
-  assert.match(html, /Choose your branch/i);
-  assert.doesNotMatch(html, /30 resources across all subjects/i);
-  assert.match(script, /data-library-branch/);
-  assert.match(script, /title: "Lectures"/);
-  assert.match(script, /title: "Notes"/);
-  assert.match(script, /title: "PYQs"/);
-  assert.match(script, /title: "Books"/);
+test("twenty separated unit PDFs remain linked", async () => {
+  const response = await fetch(`${baseUrl}/api/resources`);
+  const data = await response.json();
+  const pdfUrls = data.unitCollections.flatMap((subject) =>
+    subject.units.map((unit) => unit.pyqUrl).filter(Boolean)
+  );
+  assert.equal(pdfUrls.length, 20);
+  assert.ok(pdfUrls.every((url) => url.startsWith("/resources/pyqs/") && url.endsWith(".pdf")));
 });
 
 test("unit PDF opens inline from the website", async () => {
@@ -93,5 +82,33 @@ test("spa fallback serves the website", async () => {
   const response = await fetch(`${baseUrl}/any-page`);
   const html = await response.text();
   assert.equal(response.status, 200);
-  assert.match(html, /Everything you need/);
+  assert.match(html, /<title>HelpDesk · HBTU<\/title>/);
+  assert.match(html, /class="resource-browser"/);
+  assert.match(html, /id="branch-list"/);
+  assert.match(html, /id="subject-list"/);
+  assert.doesNotMatch(html, /resource-grid|30 resources across all subjects/);
+});
+
+test("mobile navigation uses branch and subject selectors", async () => {
+  const response = await fetch(`${baseUrl}/`);
+  const html = await response.text();
+  assert.match(html, /id="branch-select"/);
+  assert.match(html, /id="subject-select"/);
+  assert.match(html, /<aside class="mobile-menu"[\s\S]*id="timer-ring"[\s\S]*id="task-form"[\s\S]*<\/aside>/);
+  assert.doesNotMatch(html, /class="study-section/);
+});
+
+test("help section includes both supplied profiles and revealable WhatsApp contacts", async () => {
+  const response = await fetch(`${baseUrl}/`);
+  const html = await response.text();
+  assert.match(html, /id="help"/);
+  assert.match(html, /images\/akshat-shukla\.png/);
+  assert.match(html, /images\/priyanshu-dixit\.png/);
+  assert.match(html, /87870 16664/);
+  assert.match(html, /wa\.me\/919305819889/);
+  assert.match(html, /93058 19889/);
+
+  const image = await fetch(`${baseUrl}/images/akshat-shukla.png`);
+  assert.equal(image.status, 200);
+  assert.equal(image.headers.get("content-type"), "image/png");
 });

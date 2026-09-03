@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: hbtu-first-year-resource-hub
+    name: helpdesk-hbtu
     runtime: node
     plan: free
     buildCommand: npm install
