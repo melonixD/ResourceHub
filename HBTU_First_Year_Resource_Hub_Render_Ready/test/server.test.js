@@ -84,7 +84,7 @@ test("resource hierarchy is branch, semester, subject and unit", async () => {
   const engineeringNames = engineeringSubjects.map((id) => data.unitCollections.find((subject) => subject.id === id).name);
   assert.deepEqual(engineeringNames, [
     "Engineering Mathematics 1",
-    "Basic Electrical Engineering",
+    "Basic Electrical Engineering (BEE)",
     "Engineering Graphics",
     "Engineering Physics",
     "Universal Human Value",
@@ -106,10 +106,20 @@ test("syllabus is grouped into Engineering and Technology with nested semesters"
 
   const engineering = data.syllabusGroups.find((group) => group.id === "engineering");
   const technology = data.syllabusGroups.find((group) => group.id === "technology");
-  assert.ok(engineering.semesters.every((semester) => semester.syllabusIds.length === 0));
+  assert.equal(engineering.semesters[0].syllabusIds.length, 7);
+  assert.deepEqual(engineering.semesters[1].syllabusIds, technology.semesters[0].syllabusIds);
   assert.equal(technology.semesters[0].id, "semester-1-technology");
   assert.equal(technology.semesters[0].syllabusIds.length, 7);
-  assert.equal(technology.semesters[1].syllabusIds.length, 0);
+  assert.deepEqual(technology.semesters[1].syllabusIds, engineering.semesters[0].syllabusIds);
+
+  const engineeringSemesterOne = engineering.semesters[0].syllabusIds
+    .map((id) => data.syllabi.find((syllabus) => syllabus.id === id));
+  assert.equal(engineeringSemesterOne.filter((syllabus) => syllabus.available).length, 4);
+  assert.equal(engineeringSemesterOne.filter((syllabus) => !syllabus.available).length, 3);
+  assert.equal(
+    data.syllabi.find((syllabus) => syllabus.id === "bet").url,
+    "https://drive.google.com/file/d/1Cog5QS-KKcT9hmxf1f79HJw_VZNjlbk5/view?usp=drivesdk"
+  );
 });
 
 test("twenty separated unit PDFs remain linked", async () => {

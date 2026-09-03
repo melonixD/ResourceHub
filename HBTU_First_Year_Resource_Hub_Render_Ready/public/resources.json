@@ -275,7 +275,7 @@
     },
     {
       "id": "bee",
-      "name": "Basic Electrical Engineering",
+      "name": "Basic Electrical Engineering (BEE)",
       "description": "Semester course resources for Basic Electrical Engineering.",
       "accent": "yellow",
       "lectureUrl": null,
@@ -374,13 +374,13 @@
           "id": "semester-1-engineering",
           "semester": 1,
           "title": "Semester 1",
-          "syllabusIds": []
+          "syllabusIds": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"]
         },
         {
           "id": "semester-2-engineering",
           "semester": 2,
           "title": "Semester 2",
-          "syllabusIds": []
+          "syllabusIds": ["chemistry", "pc", "bem", "ees", "bet", "workshop", "food-tech"]
         }
       ]
     },
@@ -399,7 +399,7 @@
           "id": "semester-2-technology",
           "semester": 2,
           "title": "Semester 2",
-          "syllabusIds": []
+          "syllabusIds": ["maths-1", "bee", "engineering-graphics", "engineering-physics", "uhv", "pps", "etw"]
         }
       ]
     }
@@ -433,7 +433,7 @@
       "id": "bet",
       "title": "Basic Electronics Engineering",
       "available": true,
-      "url": "https://drive.google.com/file/d/1Vzy7SGv8fbdiv-O0uBeokwdqtfcRzkGb/view?usp=drive_link"
+      "url": "https://drive.google.com/file/d/1Cog5QS-KKcT9hmxf1f79HJw_VZNjlbk5/view?usp=drivesdk"
     },
     {
       "id": "workshop",
@@ -446,6 +446,48 @@
       "title": "Food Technology Core",
       "available": true,
       "url": "https://drive.google.com/file/d/1BpGbZsCugaMlFYwwagkOjrB5Cuxs1PH-/view?usp=drive_link"
+    },
+    {
+      "id": "maths-1",
+      "title": "Engineering Mathematics 1",
+      "available": true,
+      "url": "https://drive.google.com/file/d/1DFnN8PSDwmEwWx7FvAS2ebgLSC-UxDGC/view"
+    },
+    {
+      "id": "bee",
+      "title": "Basic Electrical Engineering (BEE)",
+      "available": true,
+      "url": "https://drive.google.com/file/d/11PkVQ_YrAA8Gi7o-WvvP50q-Ie3QIL0c/view?usp=drivesdk"
+    },
+    {
+      "id": "engineering-graphics",
+      "title": "Engineering Graphics",
+      "available": true,
+      "url": "https://drive.google.com/file/d/1-_LM9NMBAWI1gGrX-qUQM2Zb6lnVjM7d/view?usp=drivesdk"
+    },
+    {
+      "id": "engineering-physics",
+      "title": "Engineering Physics",
+      "available": true,
+      "url": "https://drive.google.com/file/d/1tAz1VBMc3qmdL8kFam8LRIFkpiJWqzjE/view?usp=drivesdk"
+    },
+    {
+      "id": "uhv",
+      "title": "Universal Human Value",
+      "available": false,
+      "url": null
+    },
+    {
+      "id": "pps",
+      "title": "Programming and Problem Solving",
+      "available": false,
+      "url": null
+    },
+    {
+      "id": "etw",
+      "title": "English and Technical Writing",
+      "available": false,
+      "url": null
     }
   ],
   "subjects": [

@@ -330,7 +330,7 @@ function renderSemesters(branch) {
 }
 
 function renderSubjectSyllabus(branch, subject) {
-  const syllabus = subject && state.semester === "1" && branch.group === "technology"
+  const syllabus = subject
     ? state.data.syllabi.find((item) => item.id === subject.id && item.available && item.url)
     : null;
   const link = elements["subject-syllabus"];
@@ -507,7 +507,7 @@ function renderSyllabusSemester(folder, groupTitle, folderIndex) {
 function renderSyllabusItem(item, index) {
   const content = '<span class="syllabus-index">' + twoDigits(index + 1) + '</span>' +
     '<span><strong>' + escapeHtml(item.title) + '</strong><small>' +
-    (item.available ? "Official syllabus" : "Not available yet") + '</small></span>' +
+    (item.available ? "Official syllabus" : "Coming soon") + '</small></span>' +
     '<i aria-hidden="true">' + (item.available ? "↗" : "—") + '</i>';
   return item.available
     ? '<a class="syllabus-item" href="' + escapeHtml(item.url) +
