@@ -7,8 +7,8 @@
     <meta name="theme-color" content="#f5f5f7" />
     <title>HelpDesk · HBTU</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/premium.css?v=20260903-5" />
-    <script src="/app.js?v=20260903-5" defer></script>
+    <link rel="stylesheet" href="/premium.css?v=20260903-7" />
+    <script src="/app.js?v=20260903-7" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#resources">Skip to resources</a>
@@ -83,7 +83,7 @@
       <section class="hero shell">
         <p class="overline">HBTU KANPUR</p>
         <h1>First year,<br /><span>in one place.</span></h1>
-        <p class="hero-copy">Choose your branch. Find your subject. Open exactly what you need.</p>
+        <p class="hero-copy">Choose your branch and semester. Find your subject. Open exactly what you need.</p>
         <p class="hero-credit">Made with love by <strong>Akshat Shukla</strong> and <strong>Priyanshu Dixit</strong>.</p>
         <div class="hero-meta" aria-label="Library overview">
           <span><strong>14</strong> branches</span>
@@ -97,9 +97,9 @@
           <header class="section-header">
             <div>
               <p class="overline">SYLLABUS</p>
-              <h2>Semester folders</h2>
+              <h2>Syllabus library</h2>
             </div>
-            <p>Semester 1 for Technology branches is available now. The remaining folders are ready for future uploads.</p>
+            <p>Choose Engineering or Technology, then open your semester. Semester 1 Technology files are available now.</p>
           </header>
           <div class="syllabus-list" id="syllabus-list"></div>
         </div>
@@ -111,7 +111,7 @@
             <p class="overline">LIBRARY</p>
             <h2>Browse resources</h2>
           </div>
-          <p>Branch <span>→</span> Subject <span>→</span> Unit</p>
+          <p>Branch <span>→</span> Semester <span>→</span> Subject <span>→</span> Unit</p>
         </header>
 
         <div class="resource-browser">
@@ -129,10 +129,20 @@
             </nav>
           </aside>
 
+          <aside class="browser-pane semester-pane" id="semester-pane">
+            <div class="pane-context">
+              <span>SEMESTERS IN</span>
+              <strong id="semester-pane-branch">Food Technology</strong>
+            </div>
+            <nav class="semester-list" id="semester-list" aria-label="Choose a semester">
+              <p class="pane-loading">Loading semesters…</p>
+            </nav>
+          </aside>
+
           <aside class="browser-pane subject-pane" id="subject-pane">
             <div class="pane-context">
               <span>SUBJECTS IN</span>
-              <strong id="subject-pane-branch">Mechanical Engineering</strong>
+              <strong id="subject-pane-semester">Semester 1</strong>
             </div>
             <nav class="subject-list" id="subject-list" aria-label="Choose a subject">
               <p class="pane-loading">Loading subjects…</p>
@@ -141,7 +151,7 @@
 
           <section class="content-pane" id="content-pane">
             <div class="browser-path" aria-label="Current location">
-              <span>Library</span><i>/</i><span id="path-branch">Mechanical Engineering</span><i>/</i><strong id="path-subject">Engineering Chemistry</strong>
+              <span>Library</span><i>/</i><span id="path-branch">Food Technology</span><i>/</i><span id="path-semester">Semester 1</span><i>/</i><strong id="path-subject">Engineering Chemistry</strong>
             </div>
 
             <header class="subject-header" id="subject-header">

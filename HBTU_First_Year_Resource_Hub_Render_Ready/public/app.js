@@ -5,7 +5,8 @@ const STORAGE = {
 
 const state = {
   data: null,
-  branch: "mechanical",
+  branch: "food-technology",
+  semester: "1",
   subject: "chemistry",
   query: "",
   tasks: readStorage(STORAGE.tasks, []),
@@ -18,7 +19,14 @@ const subjectCodes = {
   ees: "EES",
   bet: "BET",
   workshop: "CWP",
+  "biochemical-core": "BE",
+  "biotechnology-core": "BT",
+  "chemical-core": "CHE",
   "food-tech": "FT",
+  "leather-core": "LT",
+  "oil-core": "OT",
+  "paint-core": "PT",
+  "plastic-core": "PL",
 };
 
 const materialIcons = {
@@ -61,8 +69,9 @@ function twoDigits(value) {
 function cacheElements() {
   [
     "theme-toggle", "menu-toggle", "mobile-menu", "menu-backdrop", "available-count", "branch-count",
-    "branch-search", "branch-list", "subject-pane", "subject-pane-branch", "subject-list", "content-pane", "path-branch",
-    "path-subject", "subject-header", "subject-code", "course-name", "course-description", "course-status", "subject-syllabus",
+    "branch-search", "branch-list", "semester-pane", "semester-pane-branch", "semester-list", "subject-pane", "subject-pane-semester",
+    "subject-list", "content-pane", "path-branch", "path-semester", "path-subject", "subject-header", "subject-code",
+    "course-name", "course-description", "course-status", "subject-syllabus",
     "unit-list", "syllabus-list", "today-label", "task-form", "task-input", "task-list",
     "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
@@ -85,6 +94,7 @@ async function initialise() {
   } catch (error) {
     console.error(error);
     elements["branch-list"].innerHTML = '<p class="no-results">Branches could not load. Please refresh.</p>';
+    elements["semester-list"].innerHTML = '<p class="no-results">Semesters could not load.</p>';
     elements["subject-list"].innerHTML = '<p class="no-results">Subjects could not load.</p>';
     elements["unit-list"].innerHTML =
       '<div class="empty-state"><h3>Resources unavailable</h3><p>Please refresh the page.</p></div>';
@@ -183,6 +193,16 @@ function bindBrowserControls() {
     chooseBranch(button.dataset.branch);
   });
 
+  elements["semester-list"].addEventListener("click", (event) => {
+    const button = event.target.closest("[data-semester]");
+    if (!button) return;
+    state.semester = button.dataset.semester;
+    const branch = state.data.branches.find((item) => item.id === state.branch);
+    const subjectIds = branch.semesterSubjectIds[state.semester] || [];
+    state.subject = subjectIds.length ? subjectIds[0] : null;
+    renderBrowser("semester");
+  });
+
   elements["subject-list"].addEventListener("click", (event) => {
     const button = event.target.closest("[data-subject]");
     if (!button) return;
@@ -205,8 +225,10 @@ function bindBrowserControls() {
 
 function chooseBranch(branchId) {
   state.branch = branchId;
+  state.semester = "1";
   const branch = state.data.branches.find((item) => item.id === state.branch);
-  if (!branch.subjectIds.includes(state.subject)) state.subject = branch.subjectIds[0];
+  const subjectIds = branch.semesterSubjectIds[state.semester] || [];
+  state.subject = subjectIds.length ? subjectIds[0] : null;
   renderBrowser("branch");
 }
 
@@ -228,13 +250,37 @@ function renderBrowser(changeType) {
   const collections = state.data.unitCollections;
   const branch = branches.find((item) => item.id === state.branch) || branches[0];
   state.branch = branch.id;
-  const subjects = branch.subjectIds
+  const semesterName = "Semester " + state.semester;
+  const subjectIds = branch.semesterSubjectIds[state.semester] || [];
+  const subjects = subjectIds
     .map((id) => collections.find((collection) => collection.id === id))
     .filter(Boolean);
+
+  elements["semester-pane-branch"].textContent = branch.name;
+  renderSemesters(branch);
+  elements["subject-pane-semester"].textContent = semesterName;
+  elements["path-branch"].textContent = branch.name;
+  elements["path-semester"].textContent = semesterName;
+
+  if (!subjects.length) {
+    state.subject = null;
+    elements["subject-list"].innerHTML = '<p class="no-results">No subjects added yet</p>';
+    elements["path-subject"].textContent = "Coming soon";
+    elements["subject-code"].textContent = "S" + state.semester;
+    elements["course-name"].textContent = "Resources coming soon";
+    elements["course-description"].textContent = branch.group === "engineering"
+      ? "Engineering branch subjects will be added after their structure is provided."
+      : "Semester 2 subjects will be added when they are provided.";
+    elements["course-status"].textContent = "Empty";
+    renderSubjectSyllabus(branch, null);
+    elements["unit-list"].innerHTML = '<div class="empty-state"><h3>Nothing here yet</h3><p>This semester is ready for future subjects.</p></div>';
+    animateBrowser(changeType);
+    return;
+  }
+
   if (!subjects.some((subject) => subject.id === state.subject)) state.subject = subjects[0].id;
   const subject = subjects.find((item) => item.id === state.subject);
 
-  elements["subject-pane-branch"].textContent = branch.name;
   elements["subject-list"].innerHTML = subjects.map((item) => {
     return '<button class="subject-item ' + (item.id === subject.id ? "active" : "") +
       '" data-subject="' + item.id + '" type="button">' +
@@ -243,7 +289,6 @@ function renderBrowser(changeType) {
       '<i aria-hidden="true">›</i></button>';
   }).join("");
 
-  elements["path-branch"].textContent = branch.name;
   elements["path-subject"].textContent = subject.name;
   elements["subject-code"].textContent = subjectCodes[subject.id] || subject.name.slice(0, 2).toUpperCase();
   elements["course-name"].textContent = subject.name;
@@ -265,8 +310,20 @@ function renderBrowser(changeType) {
   animateBrowser(changeType);
 }
 
+function renderSemesters(branch) {
+  elements["semester-list"].innerHTML = ["1", "2"].map((semester) => {
+    const subjectIds = branch.semesterSubjectIds[semester] || [];
+    const count = subjectIds.length;
+    return '<button class="semester-item ' + (semester === state.semester ? "active" : "") +
+      '" data-semester="' + semester + '" type="button">' +
+      '<span class="semester-code">S' + semester + '</span><span><strong>Semester ' + semester +
+      '</strong><small>' + (count ? count + " subjects" : "Coming soon") + '</small></span>' +
+      '<i aria-hidden="true">›</i></button>';
+  }).join("");
+}
+
 function renderSubjectSyllabus(branch, subject) {
-  const syllabus = branch.group === "technology"
+  const syllabus = subject && state.semester === "1" && branch.group === "technology"
     ? state.data.syllabi.find((item) => item.id === subject.id && item.available && item.url)
     : null;
   const link = elements["subject-syllabus"];
@@ -293,6 +350,11 @@ function animateBrowser(changeType) {
   if (!changeType || prefersReducedMotion()) return;
 
   if (changeType === "branch") {
+    setStagger(elements["semester-list"], ".semester-item", 48);
+    restartAnimation(elements["semester-list"], "semesters-entering");
+  }
+
+  if (changeType === "branch" || changeType === "semester") {
     setStagger(elements["subject-list"], ".subject-item", 34);
     restartAnimation(elements["subject-list"], "subjects-entering");
   }
@@ -302,7 +364,9 @@ function animateBrowser(changeType) {
   restartAnimation(elements["unit-list"], "units-entering");
 
   if (window.innerWidth <= 850) {
-    const target = changeType === "branch" ? elements["subject-pane"] : elements["content-pane"];
+    let target = elements["content-pane"];
+    if (changeType === "branch") target = elements["semester-pane"];
+    if (changeType === "semester") target = elements["subject-pane"];
     window.setTimeout(() => {
       try {
         target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -393,24 +457,44 @@ function renderMaterial(material) {
 }
 
 function renderSyllabi() {
-  const folders = state.data.syllabusFolders || [];
-  elements["syllabus-list"].innerHTML = folders.map((folder, folderIndex) => {
-    const items = folder.syllabusIds
-      .map((id) => state.data.syllabi.find((item) => item.id === id))
-      .filter(Boolean);
-    const availableCount = items.filter((item) => item.available && item.url).length;
+  const groups = state.data.syllabusGroups || [];
+  elements["syllabus-list"].innerHTML = groups.map((group, groupIndex) => {
+    const availableCount = group.semesters.reduce((total, semester) => {
+      return total + semester.syllabusIds.reduce((count, id) => {
+        const item = state.data.syllabi.find((syllabus) => syllabus.id === id);
+        return count + (item && item.available && item.url ? 1 : 0);
+      }, 0);
+    }, 0);
     const countLabel = availableCount ? availableCount + (availableCount === 1 ? " file" : " files") : "Empty";
-    const contents = items.length
-      ? items.map((item, itemIndex) => renderSyllabusItem(item, itemIndex)).join("")
-      : '<div class="folder-empty"><strong>Nothing added yet</strong><span>Upload-ready for future syllabus files.</span></div>';
+    const semesters = group.semesters.map((semester, semesterIndex) => {
+      return renderSyllabusSemester(semester, group.title, semesterIndex);
+    }).join("");
 
-    return '<details class="syllabus-folder">' +
-      '<summary><span class="folder-index">' + twoDigits(folderIndex + 1) + '</span>' +
-      '<span class="folder-copy"><strong>' + escapeHtml(folder.title) + '</strong><small>' +
-      escapeHtml(folder.subtitle) + '</small></span><span class="folder-count">' + countLabel +
-      '</span><span class="folder-chevron" aria-hidden="true"></span></summary>' +
-      '<div class="folder-contents">' + contents + '</div></details>';
+    return '<details class="syllabus-group" ' + (group.id === "technology" ? "open" : "") + '>' +
+      '<summary class="group-summary"><span class="group-index">' + twoDigits(groupIndex + 1) + '</span>' +
+      '<span class="group-copy"><strong>' + escapeHtml(group.title) + '</strong><small>' +
+      escapeHtml(group.subtitle) + ' · 2 semester folders</small></span><span class="group-count">' +
+      countLabel + '</span><span class="group-chevron" aria-hidden="true"></span></summary>' +
+      '<div class="group-contents">' + semesters + '</div></details>';
   }).join("");
+}
+
+function renderSyllabusSemester(folder, groupTitle, folderIndex) {
+  const items = folder.syllabusIds
+    .map((id) => state.data.syllabi.find((item) => item.id === id))
+    .filter(Boolean);
+  const availableCount = items.filter((item) => item.available && item.url).length;
+  const countLabel = availableCount ? availableCount + (availableCount === 1 ? " file" : " files") : "Empty";
+  const contents = items.length
+    ? items.map((item, itemIndex) => renderSyllabusItem(item, itemIndex)).join("")
+    : '<div class="folder-empty"><strong>Nothing added yet</strong><span>This semester is ready for future syllabus files.</span></div>';
+
+  return '<details class="syllabus-folder">' +
+    '<summary><span class="folder-index">' + twoDigits(folderIndex + 1) + '</span>' +
+    '<span class="folder-copy"><strong>' + escapeHtml(folder.title) + '</strong><small>' +
+    escapeHtml(groupTitle) + ' branches</small></span><span class="folder-count">' + countLabel +
+    '</span><span class="folder-chevron" aria-hidden="true"></span></summary>' +
+    '<div class="folder-contents">' + contents + '</div></details>';
 }
 
 function renderSyllabusItem(item, index) {

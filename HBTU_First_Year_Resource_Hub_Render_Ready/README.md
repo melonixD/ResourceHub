@@ -5,15 +5,17 @@ HelpDesk is a clean, branch-first resource library for HBTU juniors. It uses a l
 ## What is included
 
 - 14 branches—including Biotechnology—in a focused three-pane browser
-- 7 first-year subjects, each organised into Units 1–5
+- Branch → Semester → Subject → Unit resource navigation
+- 6 shared Semester 1 Technology subjects plus one branch-specific Core subject
+- Empty Semester 2 and Engineering resource states, ready for later material
 - Lectures, Notes, PYQs and Books inside every unit
 - 20 separated unit-wise PYQ PDFs that open in the browser
-- Four syllabus folders split by semester and Engineering/Technology branches
+- Two large syllabus groups—Engineering and Technology—with Semester 1 and Semester 2 inside each
 - Semester 1 Technology syllabi linked both at the top and inside relevant subjects
 - Mobile-friendly vertical branch and subject lists with no sideways scrolling
 - Static resource fallback and cache-safe application updates
 - Android Chrome and WebView-compatible rendering and touch controls
-- Lightweight branch, subject, unit and resource reveal animations
+- Lightweight branch, semester, subject, unit and resource reveal animations
 - Local study list and 25-minute focus timer inside the hamburger panel
 - Help and contact section with profile photos and revealable WhatsApp details
 - Responsive light and dark themes
@@ -58,9 +60,9 @@ No database or environment variables are required.
 
 The navigation and resource links live in `data/resources.json`:
 
-- `branches` controls the engineering branch list and which subjects appear in each branch.
+- `branches` controls the branch list and each branch's `semesterSubjectIds`.
 - `unitCollections` controls each subject's five units and its lecture, notes, PYQ, and book links.
-- `syllabusFolders` controls the four semester/branch folders.
+- `syllabusGroups` controls the two branch groups and the Semester 1 and Semester 2 folders nested inside each.
 - `syllabi` controls the individual syllabus links available inside those folders and subjects.
 
 Add a resource URL to an individual unit when it is unit-specific, or to the subject collection when one link should appear in every unit. Use `null` for material that is not available yet.

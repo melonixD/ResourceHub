@@ -7,20 +7,20 @@
     "lastUpdated": "2026-09-02"
   },
   "branches": [
-    { "id": "civil", "code": "CE", "name": "Civil Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "cse", "code": "CSE", "name": "Computer Science & Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "electrical", "code": "EE", "name": "Electrical Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "electronics", "code": "EN", "name": "Electronics Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "information-technology", "code": "IT", "name": "Information Technology", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "mechanical", "code": "ME", "name": "Mechanical Engineering", "group": "engineering", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "biochemical", "code": "BE", "name": "Biochemical Engineering", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "biotechnology", "code": "BT", "name": "Biotechnology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "chemical", "code": "CH", "name": "Chemical Engineering", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "food-technology", "code": "FT", "name": "Food Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "food-tech"] },
-    { "id": "leather", "code": "LT", "name": "Leather Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "oil", "code": "OT", "name": "Oil Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "paint", "code": "PT", "name": "Paint Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] },
-    { "id": "plastic", "code": "PL", "name": "Plastic Technology", "group": "technology", "subjectIds": ["chemistry", "bem", "bet", "pc", "ees", "workshop"] }
+    { "id": "civil", "code": "CE", "name": "Civil Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
+    { "id": "cse", "code": "CSE", "name": "Computer Science & Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
+    { "id": "electrical", "code": "EE", "name": "Electrical Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
+    { "id": "electronics", "code": "EN", "name": "Electronics Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
+    { "id": "information-technology", "code": "IT", "name": "Information Technology", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
+    { "id": "mechanical", "code": "ME", "name": "Mechanical Engineering", "group": "engineering", "semesterSubjectIds": { "1": [], "2": [] } },
+    { "id": "biochemical", "code": "BE", "name": "Biochemical Engineering", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "biochemical-core"], "2": [] } },
+    { "id": "biotechnology", "code": "BT", "name": "Biotechnology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "biotechnology-core"], "2": [] } },
+    { "id": "chemical", "code": "CH", "name": "Chemical Engineering", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "chemical-core"], "2": [] } },
+    { "id": "food-technology", "code": "FT", "name": "Food Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "food-tech"], "2": [] } },
+    { "id": "leather", "code": "LT", "name": "Leather Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "leather-core"], "2": [] } },
+    { "id": "oil", "code": "OT", "name": "Oil Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "oil-core"], "2": [] } },
+    { "id": "paint", "code": "PT", "name": "Paint Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "paint-core"], "2": [] } },
+    { "id": "plastic", "code": "PL", "name": "Plastic Technology", "group": "technology", "semesterSubjectIds": { "1": ["chemistry", "bem", "bet", "pc", "ees", "workshop", "plastic-core"], "2": [] } }
   ],
   "unitCollections": [
     {
@@ -152,40 +152,151 @@
         { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
         { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
       ]
+    },
+    {
+      "id": "biochemical-core",
+      "name": "Biochemical Engineering Core",
+      "description": "Branch-specific Semester 1 material for Biochemical Engineering.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "biotechnology-core",
+      "name": "Biotechnology Core",
+      "description": "Branch-specific Semester 1 material for Biotechnology.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "chemical-core",
+      "name": "Chemical Engineering Core",
+      "description": "Branch-specific Semester 1 material for Chemical Engineering.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "leather-core",
+      "name": "Leather Technology Core",
+      "description": "Branch-specific Semester 1 material for Leather Technology.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "oil-core",
+      "name": "Oil Technology Core",
+      "description": "Branch-specific Semester 1 material for Oil Technology.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "paint-core",
+      "name": "Paint Technology Core",
+      "description": "Branch-specific Semester 1 material for Paint Technology.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
+    },
+    {
+      "id": "plastic-core",
+      "name": "Plastic Technology Core",
+      "description": "Branch-specific Semester 1 material for Plastic Technology.",
+      "accent": "teal",
+      "lectureUrl": null,
+      "notesUrl": null,
+      "units": [
+        { "number": 1, "title": "Unit 1 Resources", "pyqUrl": null },
+        { "number": 2, "title": "Unit 2 Resources", "pyqUrl": null },
+        { "number": 3, "title": "Unit 3 Resources", "pyqUrl": null },
+        { "number": 4, "title": "Unit 4 Resources", "pyqUrl": null },
+        { "number": 5, "title": "Unit 5 Resources", "pyqUrl": null }
+      ]
     }
   ],
-  "syllabusFolders": [
+  "syllabusGroups": [
     {
-      "id": "semester-1-technology",
-      "semester": 1,
-      "group": "technology",
-      "title": "Semester 1",
-      "subtitle": "Technology branches",
-      "syllabusIds": ["chemistry", "pc", "bem", "ees", "bet", "workshop", "food-tech"]
-    },
-    {
-      "id": "semester-1-engineering",
-      "semester": 1,
-      "group": "engineering",
-      "title": "Semester 1",
+      "id": "engineering",
+      "title": "Engineering",
       "subtitle": "Engineering branches",
-      "syllabusIds": []
+      "semesters": [
+        {
+          "id": "semester-1-engineering",
+          "semester": 1,
+          "title": "Semester 1",
+          "syllabusIds": []
+        },
+        {
+          "id": "semester-2-engineering",
+          "semester": 2,
+          "title": "Semester 2",
+          "syllabusIds": []
+        }
+      ]
     },
     {
-      "id": "semester-2-technology",
-      "semester": 2,
-      "group": "technology",
-      "title": "Semester 2",
+      "id": "technology",
+      "title": "Technology",
       "subtitle": "Technology branches",
-      "syllabusIds": []
-    },
-    {
-      "id": "semester-2-engineering",
-      "semester": 2,
-      "group": "engineering",
-      "title": "Semester 2",
-      "subtitle": "Engineering branches",
-      "syllabusIds": []
+      "semesters": [
+        {
+          "id": "semester-1-technology",
+          "semester": 1,
+          "title": "Semester 1",
+          "syllabusIds": ["chemistry", "pc", "bem", "ees", "bet", "workshop", "food-tech"]
+        },
+        {
+          "id": "semester-2-technology",
+          "semester": 2,
+          "title": "Semester 2",
+          "syllabusIds": []
+        }
+      ]
     }
   ],
   "syllabi": [

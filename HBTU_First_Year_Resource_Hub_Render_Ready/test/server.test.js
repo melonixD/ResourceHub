@@ -55,8 +55,8 @@ test("library exposes fourteen branches including Biotechnology", async () => {
   const response = await fetch(`${baseUrl}/api/resources`);
   const data = await response.json();
   assert.equal(data.branches.length, 14);
-  assert.equal(data.unitCollections.length, 7);
-  assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 35);
+  assert.equal(data.unitCollections.length, 14);
+  assert.equal(data.unitCollections.reduce((total, subject) => total + subject.units.length, 0), 70);
   assert.ok(data.branches.some((branch) => branch.name === "Mechanical Engineering"));
   assert.ok(data.branches.some((branch) => branch.name === "Electrical Engineering"));
   assert.ok(data.branches.some((branch) => branch.name === "Biotechnology" && branch.group === "technology"));
@@ -64,13 +64,37 @@ test("library exposes fourteen branches including Biotechnology", async () => {
   assert.equal(data.branches.filter((branch) => branch.group === "technology").length, 8);
 });
 
-test("syllabus is grouped into four semester and branch folders", async () => {
+test("resource hierarchy is branch, semester, subject and unit", async () => {
   const response = await fetch(`${baseUrl}/api/resources`);
   const data = await response.json();
-  assert.equal(data.syllabusFolders.length, 4);
-  assert.equal(data.syllabusFolders[0].id, "semester-1-technology");
-  assert.equal(data.syllabusFolders[0].syllabusIds.length, 7);
-  assert.ok(data.syllabusFolders.slice(1).every((folder) => folder.syllabusIds.length === 0));
+  const technologyBranches = data.branches.filter((branch) => branch.group === "technology");
+  const engineeringBranches = data.branches.filter((branch) => branch.group === "engineering");
+  const commonSubjects = ["chemistry", "bem", "bet", "pc", "ees", "workshop"];
+
+  assert.ok(technologyBranches.every((branch) => branch.semesterSubjectIds["1"].length === 7));
+  assert.ok(technologyBranches.every((branch) => commonSubjects.every((id) => branch.semesterSubjectIds["1"].includes(id))));
+  assert.ok(technologyBranches.every((branch) => branch.semesterSubjectIds["2"].length === 0));
+  assert.ok(engineeringBranches.every((branch) => branch.semesterSubjectIds["1"].length === 0));
+  assert.ok(engineeringBranches.every((branch) => branch.semesterSubjectIds["2"].length === 0));
+
+  const coreIds = technologyBranches.map((branch) => branch.semesterSubjectIds["1"][6]);
+  assert.equal(new Set(coreIds).size, 8);
+  assert.ok(coreIds.every((id) => data.unitCollections.some((subject) => subject.id === id)));
+});
+
+test("syllabus is grouped into Engineering and Technology with nested semesters", async () => {
+  const response = await fetch(`${baseUrl}/api/resources`);
+  const data = await response.json();
+  assert.equal(data.syllabusGroups.length, 2);
+  assert.deepEqual(data.syllabusGroups.map((group) => group.id), ["engineering", "technology"]);
+  assert.ok(data.syllabusGroups.every((group) => group.semesters.length === 2));
+
+  const engineering = data.syllabusGroups.find((group) => group.id === "engineering");
+  const technology = data.syllabusGroups.find((group) => group.id === "technology");
+  assert.ok(engineering.semesters.every((semester) => semester.syllabusIds.length === 0));
+  assert.equal(technology.semesters[0].id, "semester-1-technology");
+  assert.equal(technology.semesters[0].syllabusIds.length, 7);
+  assert.equal(technology.semesters[1].syllabusIds.length, 0);
 });
 
 test("twenty separated unit PDFs remain linked", async () => {
@@ -97,6 +121,7 @@ test("spa fallback serves the website", async () => {
   assert.match(html, /<title>HelpDesk · HBTU<\/title>/);
   assert.match(html, /class="resource-browser"/);
   assert.match(html, /id="branch-list"/);
+  assert.match(html, /id="semester-list"/);
   assert.match(html, /id="subject-list"/);
   assert.match(html, /id="subject-syllabus"/);
   assert.ok(html.indexOf('id="syllabus"') < html.indexOf('id="resources"'));
@@ -107,6 +132,7 @@ test("mobile navigation keeps branch and subject lists available", async () => {
   const response = await fetch(`${baseUrl}/`);
   const html = await response.text();
   assert.match(html, /id="branch-list"[\s\S]*Loading branches/);
+  assert.match(html, /id="semester-list"[\s\S]*Loading semesters/);
   assert.match(html, /id="subject-list"[\s\S]*Loading subjects/);
   assert.doesNotMatch(html, /id="branch-select"|id="subject-select"/);
   assert.match(html, /<aside class="mobile-menu"[\s\S]*id="timer-ring"[\s\S]*id="task-form"[\s\S]*<\/aside>/);
@@ -131,11 +157,15 @@ test("static resource fallback works and application assets cannot go stale", as
   assert.match(styleText, /touch-action: pan-y/);
   assert.match(styleText, /-webkit-overflow-scrolling: touch/);
   assert.match(styleText, /@keyframes subject-item-enter/);
+  assert.match(styleText, /@keyframes semester-item-enter/);
   assert.match(styleText, /@keyframes unit-row-enter/);
   assert.match(scriptText, /animateBrowser\(changeType\)/);
+  assert.match(scriptText, /renderSemesters\(branch\)/);
   assert.match(scriptText, /prefersReducedMotion\(\)/);
   assert.match(scriptText, /renderSubjectSyllabus\(branch, subject\)/);
-  assert.match(scriptText, /syllabusFolders/);
+  assert.match(scriptText, /syllabusGroups/);
+  assert.match(scriptText, /syllabus-group/);
+  assert.match(styleText, /\.syllabus-section \.overline[\s\S]*font-size: 16px/);
 });
 
 test("help section includes both supplied profiles and revealable WhatsApp contacts", async () => {
