@@ -116,6 +116,10 @@ test("static resource fallback works and application assets cannot go stale", as
   const styleText = await styles.text();
   assert.match(styleText, /touch-action: pan-y/);
   assert.match(styleText, /-webkit-overflow-scrolling: touch/);
+  assert.match(styleText, /@keyframes subject-item-enter/);
+  assert.match(styleText, /@keyframes unit-row-enter/);
+  assert.match(scriptText, /animateBrowser\(changeType\)/);
+  assert.match(scriptText, /prefersReducedMotion\(\)/);
 });
 
 test("help section includes both supplied profiles and revealable WhatsApp contacts", async () => {

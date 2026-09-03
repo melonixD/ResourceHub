@@ -555,6 +555,7 @@ body.menu-open {
   color: var(--text);
   cursor: pointer;
   text-align: left;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.14s ease;
 }
 
 .branch-item {
@@ -569,6 +570,11 @@ body.menu-open {
 .branch-item:hover,
 .subject-item:hover {
   background: var(--surface-pressed);
+}
+
+.branch-item:active,
+.subject-item:active {
+  transform: scale(0.985);
 }
 
 .branch-item.active {
@@ -669,6 +675,10 @@ body.menu-open {
   background: var(--blue-soft);
 }
 
+.subject-list.subjects-entering .subject-item {
+  animation: subject-item-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .subject-monogram {
   display: grid;
   width: 34px;
@@ -748,6 +758,10 @@ body.menu-open {
   padding-block: 24px 22px;
 }
 
+.subject-header.subject-entering {
+  animation: subject-header-enter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .subject-code {
   display: grid;
   width: 48px;
@@ -792,6 +806,10 @@ body.menu-open {
 
 .unit-row {
   border-bottom: 1px solid var(--border);
+}
+
+.unit-list.units-entering .unit-row {
+  animation: unit-row-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .unit-row summary {
@@ -890,6 +908,55 @@ body.menu-open {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--border);
+}
+
+.unit-row[open] .material-list {
+  animation: materials-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: top center;
+}
+
+@keyframes subject-item-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(-10px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes subject-header-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes unit-row-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes materials-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -5px, 0) scaleY(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scaleY(1);
+  }
 }
 
 .material-item {

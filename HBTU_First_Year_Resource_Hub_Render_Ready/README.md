@@ -12,6 +12,7 @@ HelpDesk is a clean, branch-first resource library for HBTU juniors. It uses a l
 - Mobile-friendly vertical branch and subject lists with no sideways scrolling
 - Static resource fallback and cache-safe application updates
 - Android Chrome and WebView-compatible rendering and touch controls
+- Lightweight branch, subject, unit and resource reveal animations
 - Local study list and 25-minute focus timer inside the hamburger panel
 - Help and contact section with profile photos and revealable WhatsApp details
 - Responsive light and dark themes

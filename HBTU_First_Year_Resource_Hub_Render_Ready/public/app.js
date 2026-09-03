@@ -61,8 +61,8 @@ function twoDigits(value) {
 function cacheElements() {
   [
     "theme-toggle", "menu-toggle", "mobile-menu", "menu-backdrop", "available-count", "branch-count",
-    "branch-search", "branch-list", "subject-pane-branch", "subject-list", "path-branch",
-    "path-subject", "subject-code", "course-name", "course-description", "course-status",
+    "branch-search", "branch-list", "subject-pane", "subject-pane-branch", "subject-list", "content-pane", "path-branch",
+    "path-subject", "subject-header", "subject-code", "course-name", "course-description", "course-status",
     "unit-list", "syllabus-list", "today-label", "task-form", "task-input", "task-list",
     "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
@@ -187,7 +187,7 @@ function bindBrowserControls() {
     const button = event.target.closest("[data-subject]");
     if (!button) return;
     state.subject = button.dataset.subject;
-    renderBrowser();
+    renderBrowser("subject");
   });
 
   document.addEventListener("keydown", (event) => {
@@ -207,7 +207,7 @@ function chooseBranch(branchId) {
   state.branch = branchId;
   const branch = state.data.branches.find((item) => item.id === state.branch);
   if (!branch.subjectIds.includes(state.subject)) state.subject = branch.subjectIds[0];
-  renderBrowser();
+  renderBrowser("branch");
 }
 
 function visibleBranches() {
@@ -222,7 +222,7 @@ function countPdfs(collection) {
   return collection.units.filter((unit) => Boolean(unit.pyqUrl)).length;
 }
 
-function renderBrowser() {
+function renderBrowser(changeType) {
   renderBranches();
   const branches = state.data.branches;
   const collections = state.data.unitCollections;
@@ -260,6 +260,49 @@ function renderBrowser() {
       });
     });
   });
+
+  animateBrowser(changeType);
+}
+
+function animateBrowser(changeType) {
+  if (!changeType || prefersReducedMotion()) return;
+
+  if (changeType === "branch") {
+    setStagger(elements["subject-list"], ".subject-item", 34);
+    restartAnimation(elements["subject-list"], "subjects-entering");
+  }
+
+  setStagger(elements["unit-list"], ".unit-row", 42);
+  restartAnimation(elements["subject-header"], "subject-entering");
+  restartAnimation(elements["unit-list"], "units-entering");
+
+  if (window.innerWidth <= 850) {
+    const target = changeType === "branch" ? elements["subject-pane"] : elements["content-pane"];
+    window.setTimeout(() => {
+      try {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (error) {
+        target.scrollIntoView(true);
+      }
+    }, 140);
+  }
+}
+
+function setStagger(container, selector, interval) {
+  container.querySelectorAll(selector).forEach((item, index) => {
+    item.style.animationDelay = String(index * interval) + "ms";
+  });
+}
+
+function restartAnimation(element, className) {
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+}
+
+function prefersReducedMotion() {
+  return typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 function renderBranches() {
