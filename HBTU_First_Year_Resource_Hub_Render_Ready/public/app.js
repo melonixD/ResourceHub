@@ -41,6 +41,7 @@ const materialIcons = {
   notes: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg>',
   pyq: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7zM15 3v5h4M10 12h6M10 16h5" /></svg>',
   book: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H12v18H7.5A3.5 3.5 0 0 0 4 23zM20 5.5A3.5 3.5 0 0 0 16.5 2H12v18h4.5A3.5 3.5 0 0 1 20 23z" /></svg>',
+  practice: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" /></svg>',
 };
 
 const elements = {};
@@ -81,6 +82,8 @@ function cacheElements() {
     "course-name", "course-description", "course-status", "subject-syllabus",
     "unit-list", "syllabus-list", "today-label", "task-form", "task-input", "task-list",
     "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
+    "practice-modal", "practice-backdrop", "practice-close", "practice-subject", "practice-unit",
+    "practice-body", "practice-generate",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
 }
 
@@ -91,6 +94,7 @@ async function initialise() {
   initialiseContacts();
   initialisePlanner();
   initialiseTimer();
+  initialisePractice();
   bindBrowserControls();
 
   try {
@@ -442,6 +446,14 @@ function renderUnit(subject, unit, index) {
       description: unit.bookUrl || subject.booksUrl ? "Recommended reading" : "Not added yet",
       url: unit.bookUrl || subject.booksUrl,
     },
+    {
+      type: "practice",
+      title: "Practice Mode",
+      description: unit.pyqUrl ? "AI-generated questions from this unit's PYQs" : "Needs PYQs first",
+      url: unit.pyqUrl,
+      subject: subject.name,
+      unitTitle: unit.title,
+    },
   ];
   const ready = materials.filter((material) => material.url).length;
   return '<details class="unit-row" ' + (index === 0 ? "open" : "") + '>' +
@@ -452,11 +464,20 @@ function renderUnit(subject, unit, index) {
 }
 
 function renderMaterial(material) {
+  const isPractice = material.type === "practice";
+  const actionLabel = material.url ? (isPractice ? "Generate" : "Open") : "Soon";
   const content = '<span class="material-icon">' + materialIcons[material.type] + '</span>' +
     '<span class="material-copy"><strong>' + escapeHtml(material.title) + '</strong><small>' +
     escapeHtml(material.description) + '</small></span>' +
-    '<span class="material-action">' + (material.url ? "Open" : "Soon") +
-    (material.url ? '<i aria-hidden="true">↗</i>' : "") + '</span>';
+    '<span class="material-action">' + actionLabel +
+    (material.url ? '<i aria-hidden="true">' + (isPractice ? "✨" : "↗") + '</i>' : "") + '</span>';
+
+  if (isPractice && material.url) {
+    return '<button class="material-item practice-trigger" type="button" data-pyq-url="' +
+      escapeHtml(material.url) + '" data-subject="' + escapeHtml(material.subject) +
+      '" data-unit-title="' + escapeHtml(material.unitTitle) + '">' + content + '</button>';
+  }
+
   return material.url
     ? '<a class="material-item" href="' + escapeHtml(material.url) +
       '" target="_blank" rel="noopener noreferrer">' + content + '</a>'
@@ -621,6 +642,98 @@ function updateTimer() {
   document.title = timerInterval
     ? elements["timer-value"].textContent + " · HelpDesk"
     : "HelpDesk · HBTU";
+}
+
+let practiceState = { pyqUrl: null, subject: "", unitTitle: "" };
+
+function initialisePractice() {
+  elements["unit-list"].addEventListener("click", (event) => {
+    const trigger = event.target.closest(".practice-trigger");
+    if (!trigger) return;
+    openPracticeModal(trigger.dataset.pyqUrl, trigger.dataset.subject, trigger.dataset.unitTitle);
+  });
+
+  elements["practice-backdrop"].addEventListener("click", closePracticeModal);
+  elements["practice-close"].addEventListener("click", closePracticeModal);
+  elements["practice-generate"].addEventListener("click", () => generatePractice());
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !elements["practice-modal"].hidden) {
+      closePracticeModal();
+    }
+  });
+}
+
+function openPracticeModal(pyqUrl, subject, unitTitle) {
+  practiceState = { pyqUrl, subject, unitTitle };
+  elements["practice-subject"].textContent = subject;
+  elements["practice-unit"].textContent = unitTitle;
+  elements["practice-body"].innerHTML =
+    '<p class="practice-hint">Generates 5 new practice questions in the style of this unit\'s real PYQs, using AI.</p>';
+  elements["practice-modal"].hidden = false;
+  elements["practice-backdrop"].hidden = false;
+  document.body.classList.add("no-scroll");
+  generatePractice();
+}
+
+function closePracticeModal() {
+  elements["practice-modal"].hidden = true;
+  elements["practice-backdrop"].hidden = true;
+  document.body.classList.remove("no-scroll");
+}
+
+async function generatePractice() {
+  const { pyqUrl } = practiceState;
+  if (!pyqUrl) return;
+
+  elements["practice-generate"].disabled = true;
+  elements["practice-generate"].textContent = "Generating…";
+  elements["practice-body"].innerHTML = '<div class="practice-loading">' +
+    '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>';
+
+  try {
+    const response = await fetch("/api/practice/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pyqUrl }),
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      elements["practice-body"].innerHTML =
+        '<div class="practice-error"><p>' + escapeHtml(data.error || "Something went wrong.") + '</p></div>';
+      return;
+    }
+
+    if (!Array.isArray(data.questions) || !data.questions.length) {
+      elements["practice-body"].innerHTML = '<div class="practice-error"><p>No questions came back. Try again.</p></div>';
+      return;
+    }
+
+    elements["practice-body"].innerHTML = data.questions.map(renderPracticeQuestion).join("");
+    elements["practice-body"].querySelectorAll(".practice-toggle").forEach((button) => {
+      button.addEventListener("click", () => {
+        const answer = button.nextElementSibling;
+        const showing = answer.classList.toggle("show");
+        button.textContent = showing ? "Hide answer" : "Show answer";
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    elements["practice-body"].innerHTML =
+      '<div class="practice-error"><p>Could not reach the server. Check your connection and try again.</p></div>';
+  } finally {
+    elements["practice-generate"].disabled = false;
+    elements["practice-generate"].textContent = "Generate 5 more";
+  }
+}
+
+function renderPracticeQuestion(item, index) {
+  return '<article class="practice-card">' +
+    '<p class="practice-question"><strong>Q' + (index + 1) + '.</strong> ' + escapeHtml(item.question) + '</p>' +
+    '<button class="practice-toggle" type="button">Show answer</button>' +
+    '<div class="practice-answer">' + escapeHtml(item.answer || "No answer provided.") + '</div>' +
+    '</article>';
 }
 
 document.addEventListener("DOMContentLoaded", initialise);

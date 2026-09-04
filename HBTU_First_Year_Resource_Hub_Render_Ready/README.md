@@ -22,6 +22,7 @@ HelpDesk is a clean, branch-first resource library for HBTU juniors. It uses a l
 - Help and contact section with profile photos and revealable WhatsApp details
 - Responsive light and dark themes
 - Render Blueprint configuration and health endpoint
+- **Practice Mode** — AI-generated practice questions per unit, built from your real PYQs (see below)
 
 ## Run locally
 
@@ -35,6 +36,30 @@ npm start
 ```
 
 4. Open `http://localhost:3000`.
+
+To also test Practice Mode locally, copy `.env.example` to `.env`, add a free `GEMINI_API_KEY` (see below), then run `npm start`.
+
+## Practice Mode (AI-generated questions)
+
+Every unit that has a PYQ PDF now shows a "Practice Mode" option. It sends a handful of real questions from that unit as examples to Google's Gemini API and asks for 5 new, similar questions with answers — so students get unlimited fresh practice instead of just the same fixed PYQ set.
+
+**How it works**
+- `scripts/build-pyq-bank.py` extracts individual questions from every PYQ PDF and writes `data/pyq-bank.json` (already generated and committed — you don't need to re-run this unless you add new PYQ PDFs).
+- `server.js` exposes `POST /api/practice/generate` — it takes a `pyqUrl`, looks up real questions for that unit, and calls the Gemini API server-side (your key is never exposed to the browser).
+- `public/app.js` renders the "Practice Mode" button and a modal to display generated questions.
+
+**Setup (free)**
+1. Get a free API key at [aistudio.google.com](https://aistudio.google.com) → API Keys.
+2. Set it as an environment variable named `GEMINI_API_KEY` (locally via `.env`, or in Render's dashboard — `render.yaml` already declares this variable so Render will prompt for it on deploy).
+3. That's it — the free tier (Gemini Flash) covers normal traffic for a small student site. If it's ever unset, Practice Mode shows a friendly "not configured" message instead of breaking the rest of the site.
+
+**Re-generating the question bank**
+If you add new PYQ PDFs later, update `data/resources.json` as usual, then re-run:
+```bash
+pip install pdfplumber
+python3 scripts/build-pyq-bank.py
+```
+This regenerates `data/pyq-bank.json` from every PDF referenced in `unitCollections`.
 
 ## Deploy on Render
 
@@ -56,7 +81,7 @@ Use these settings if you prefer to create a Web Service manually:
 | Start command | `npm start` |
 | Health check path | `/api/health` |
 
-No database or environment variables are required.
+No database is required. Practice Mode needs one environment variable — see the section above.
 
 ## Update resources
 
@@ -74,6 +99,8 @@ Add a resource URL to an individual unit when it is unit-specific, or to the sub
 ```text
 first-year-resource-hub/
 ├── data/resources.json
+├── data/pyq-bank.json      # extracted PYQ text used to seed Practice Mode
+├── scripts/build-pyq-bank.py
 ├── public/
 │   ├── app.js
 │   ├── index.html
@@ -91,5 +118,6 @@ first-year-resource-hub/
 - `GET /api/health` — deployment health check
 - `GET /api/resources` — complete HelpDesk content
 - `GET /api/resources?q=spectroscopy&type=lecture&subject=chemistry` — optional filtered legacy resource response
+- `POST /api/practice/generate` — body `{ "pyqUrl": "/resources/pyqs/.../Unit_3_PYQs.pdf" }`, returns 5 AI-generated practice questions with answers for that unit
 
 Made for HBTU juniors by **Akshat Shukla** and **Priyanshu Dixit**. Licensed under MIT.

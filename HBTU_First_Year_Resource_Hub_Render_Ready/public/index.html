@@ -211,6 +211,22 @@
 
     </main>
 
+    <div class="practice-backdrop" id="practice-backdrop" hidden></div>
+    <section class="practice-modal" id="practice-modal" role="dialog" aria-modal="true" aria-labelledby="practice-heading" hidden>
+      <header class="practice-header">
+        <div>
+          <p class="overline">PRACTICE MODE</p>
+          <h3 id="practice-heading"><span id="practice-subject">Subject</span> · <span id="practice-unit">Unit</span></h3>
+        </div>
+        <button class="practice-close" id="practice-close" type="button" aria-label="Close practice mode">×</button>
+      </header>
+      <div class="practice-body" id="practice-body"></div>
+      <footer class="practice-footer">
+        <p class="practice-disclaimer">AI-generated — always double-check against your notes.</p>
+        <button class="primary-button" id="practice-generate" type="button">Generate 5 more</button>
+      </footer>
+    </section>
+
     <footer class="site-footer">
       <div class="shell">
         <p>HelpDesk</p>
