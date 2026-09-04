@@ -82,8 +82,8 @@ function cacheElements() {
     "course-name", "course-description", "course-status", "subject-syllabus",
     "unit-list", "syllabus-list", "today-label", "task-form", "task-input", "task-list",
     "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
-    "practice-modal", "practice-backdrop", "practice-close", "practice-subject", "practice-unit",
-    "practice-body", "practice-generate",
+    "practice-open", "practice-hub", "practice-hub-close", "practice-back", "practice-hub-heading",
+    "practice-hub-body",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
 }
 
@@ -644,96 +644,258 @@ function updateTimer() {
     : "HelpDesk · HBTU";
 }
 
-let practiceState = { pyqUrl: null, subject: "", unitTitle: "" };
+/* ---------- Unlimited Practice Hub ---------- */
+/* A full-screen, four-step flow: semester -> subject -> unit -> quiz.
+   "quiz" streams one AI-generated question at a time (Next fetches more
+   from the server once the current batch runs out), so it feels infinite. */
+
+let practiceHub = {
+  step: "semester", // "semester" | "subject" | "unit" | "quiz"
+  semester: null,
+  subjectId: null,
+  subjectName: "",
+  unit: null, // { number, title, pyqUrl }
+  questions: [],
+  index: 0,
+  loadingMore: false,
+};
 
 function initialisePractice() {
+  elements["practice-open"].addEventListener("click", () => {
+    closeMenu();
+    openPracticeHub("semester");
+  });
+
   elements["unit-list"].addEventListener("click", (event) => {
     const trigger = event.target.closest(".practice-trigger");
     if (!trigger) return;
-    openPracticeModal(trigger.dataset.pyqUrl, trigger.dataset.subject, trigger.dataset.unitTitle);
+    openPracticeHub("quiz", {
+      subjectName: trigger.dataset.subject,
+      unit: { title: trigger.dataset.unitTitle, pyqUrl: trigger.dataset.pyqUrl },
+    });
   });
 
-  elements["practice-backdrop"].addEventListener("click", closePracticeModal);
-  elements["practice-close"].addEventListener("click", closePracticeModal);
-  elements["practice-generate"].addEventListener("click", () => generatePractice());
+  elements["practice-hub-close"].addEventListener("click", closePracticeHub);
+  elements["practice-back"].addEventListener("click", practiceGoBack);
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !elements["practice-modal"].hidden) {
-      closePracticeModal();
+    if (event.key === "Escape" && elements["practice-hub"].classList.contains("open")) {
+      closePracticeHub();
     }
   });
 }
 
-function openPracticeModal(pyqUrl, subject, unitTitle) {
-  practiceState = { pyqUrl, subject, unitTitle };
-  elements["practice-subject"].textContent = subject;
-  elements["practice-unit"].textContent = unitTitle;
-  elements["practice-body"].innerHTML =
-    '<p class="practice-hint">Generates 5 new practice questions in the style of this unit\'s real PYQs, using AI.</p>';
-  elements["practice-modal"].hidden = false;
-  elements["practice-backdrop"].hidden = false;
+function openPracticeHub(step, seed) {
+  practiceHub = {
+    step,
+    semester: null,
+    subjectId: null,
+    subjectName: (seed && seed.subjectName) || "",
+    unit: (seed && seed.unit) || null,
+    questions: [],
+    index: 0,
+    loadingMore: false,
+  };
+  elements["practice-hub"].classList.add("open");
   document.body.classList.add("no-scroll");
-  generatePractice();
+  if (step === "quiz") {
+    startQuiz();
+  } else {
+    renderPracticeStep();
+  }
 }
 
-function closePracticeModal() {
-  elements["practice-modal"].hidden = true;
-  elements["practice-backdrop"].hidden = true;
+function closePracticeHub() {
+  elements["practice-hub"].classList.remove("open");
   document.body.classList.remove("no-scroll");
 }
 
-async function generatePractice() {
-  const { pyqUrl } = practiceState;
-  if (!pyqUrl) return;
+function practiceGoBack() {
+  if (practiceHub.step === "quiz") {
+    practiceHub.step = practiceHub.subjectId ? "unit" : "semester";
+  } else if (practiceHub.step === "unit") {
+    practiceHub.step = "subject";
+  } else if (practiceHub.step === "subject") {
+    practiceHub.step = "semester";
+  } else {
+    closePracticeHub();
+    return;
+  }
+  renderPracticeStep();
+}
 
-  elements["practice-generate"].disabled = true;
-  elements["practice-generate"].textContent = "Generating…";
-  elements["practice-body"].innerHTML = '<div class="practice-loading">' +
+function subjectsForSemester(semester) {
+  const branches = state.data.branches || [];
+  const ids = new Set();
+  branches.forEach((branch) => {
+    (branch.semesterSubjectIds[semester] || []).forEach((id) => ids.add(id));
+  });
+  return (state.data.unitCollections || [])
+    .filter((subject) => ids.has(subject.id) && subject.units.some((unit) => unit.pyqUrl))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function unitsForSubject(subjectId) {
+  const subject = (state.data.unitCollections || []).find((item) => item.id === subjectId);
+  if (!subject) return [];
+  return subject.units.filter((unit) => unit.pyqUrl);
+}
+
+function renderPracticeStep() {
+  const heading = elements["practice-hub-heading"];
+  const back = elements["practice-back"];
+  const body = elements["practice-hub-body"];
+  back.hidden = practiceHub.step === "semester";
+
+  if (practiceHub.step === "semester") {
+    heading.textContent = "Choose a semester";
+    body.innerHTML = ["1", "2"].map((sem) =>
+      '<button class="practice-option" type="button" data-semester="' + sem + '">' +
+        '<strong>Semester ' + sem + '</strong><span>→</span></button>'
+    ).join("");
+    body.querySelectorAll("[data-semester]").forEach((button) => {
+      button.addEventListener("click", () => {
+        practiceHub.semester = button.dataset.semester;
+        practiceHub.step = "subject";
+        renderPracticeStep();
+      });
+    });
+    return;
+  }
+
+  if (practiceHub.step === "subject") {
+    heading.textContent = "Semester " + practiceHub.semester + " · choose a subject";
+    const subjects = subjectsForSemester(practiceHub.semester);
+    body.innerHTML = subjects.length
+      ? subjects.map((subject) =>
+          '<button class="practice-option" type="button" data-subject="' + escapeHtml(subject.id) + '">' +
+            '<strong>' + escapeHtml(subject.name) + '</strong><span>→</span></button>'
+        ).join("")
+      : '<div class="empty-state"><h3>No PYQ-backed subjects yet</h3><p>This semester doesn\'t have practice-ready units yet.</p></div>';
+    body.querySelectorAll("[data-subject]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const subject = subjects.find((item) => item.id === button.dataset.subject);
+        practiceHub.subjectId = subject.id;
+        practiceHub.subjectName = subject.name;
+        practiceHub.step = "unit";
+        renderPracticeStep();
+      });
+    });
+    return;
+  }
+
+  if (practiceHub.step === "unit") {
+    heading.textContent = practiceHub.subjectName + " · choose a unit";
+    const units = unitsForSubject(practiceHub.subjectId);
+    body.innerHTML = units.length
+      ? units.map((unit) =>
+          '<button class="practice-option" type="button" data-pyq-url="' + escapeHtml(unit.pyqUrl) +
+            '" data-unit-title="' + escapeHtml(unit.title) + '">' +
+            '<strong>Unit ' + unit.number + '</strong><span class="practice-option-sub">' + escapeHtml(unit.title) + '</span></button>'
+        ).join("")
+      : '<div class="empty-state"><h3>No units yet</h3><p>PYQs for this subject aren\'t added yet.</p></div>';
+    body.querySelectorAll("[data-pyq-url]").forEach((button) => {
+      button.addEventListener("click", () => {
+        practiceHub.unit = { title: button.dataset.unitTitle, pyqUrl: button.dataset.pyqUrl };
+        practiceHub.step = "quiz";
+        startQuiz();
+      });
+    });
+  }
+}
+
+function startQuiz() {
+  const heading = elements["practice-hub-heading"];
+  const back = elements["practice-back"];
+  back.hidden = false;
+  heading.textContent = practiceHub.subjectName ? practiceHub.subjectName + " · " + practiceHub.unit.title : practiceHub.unit.title;
+  practiceHub.questions = [];
+  practiceHub.index = 0;
+  renderQuizLoading();
+  fetchMoreQuestions().then(() => renderQuizQuestion());
+}
+
+function renderQuizLoading() {
+  elements["practice-hub-body"].innerHTML = '<div class="practice-loading">' +
     '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>';
+}
 
+async function fetchMoreQuestions() {
   try {
     const response = await fetch("/api/practice/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pyqUrl }),
+      body: JSON.stringify({ pyqUrl: practiceHub.unit.pyqUrl }),
     });
     const data = await response.json();
-
     if (!response.ok) {
-      elements["practice-body"].innerHTML =
-        '<div class="practice-error"><p>' + escapeHtml(data.error || "Something went wrong.") + '</p></div>';
-      return;
+      renderQuizError(data.error || "Something went wrong.");
+      return false;
     }
-
     if (!Array.isArray(data.questions) || !data.questions.length) {
-      elements["practice-body"].innerHTML = '<div class="practice-error"><p>No questions came back. Try again.</p></div>';
-      return;
+      renderQuizError("No questions came back. Try again.");
+      return false;
     }
-
-    elements["practice-body"].innerHTML = data.questions.map(renderPracticeQuestion).join("");
-    elements["practice-body"].querySelectorAll(".practice-toggle").forEach((button) => {
-      button.addEventListener("click", () => {
-        const answer = button.nextElementSibling;
-        const showing = answer.classList.toggle("show");
-        button.textContent = showing ? "Hide answer" : "Show answer";
-      });
-    });
+    if (!practiceHub.subjectName && data.subject) practiceHub.subjectName = data.subject;
+    practiceHub.questions.push(...data.questions);
+    return true;
   } catch (error) {
     console.error(error);
-    elements["practice-body"].innerHTML =
-      '<div class="practice-error"><p>Could not reach the server. Check your connection and try again.</p></div>';
-  } finally {
-    elements["practice-generate"].disabled = false;
-    elements["practice-generate"].textContent = "Generate 5 more";
+    renderQuizError("Could not reach the server. Check your connection and try again.");
+    return false;
   }
 }
 
-function renderPracticeQuestion(item, index) {
-  return '<article class="practice-card">' +
-    '<p class="practice-question"><strong>Q' + (index + 1) + '.</strong> ' + escapeHtml(item.question) + '</p>' +
-    '<button class="practice-toggle" type="button">Show answer</button>' +
-    '<div class="practice-answer">' + escapeHtml(item.answer || "No answer provided.") + '</div>' +
-    '</article>';
+function renderQuizError(message) {
+  elements["practice-hub-body"].innerHTML = '<div class="practice-error"><p>' + escapeHtml(message) + '</p>' +
+    '<button class="secondary-button" id="practice-retry" type="button">Try again</button></div>';
+  const retry = document.getElementById("practice-retry");
+  if (retry) retry.addEventListener("click", () => { renderQuizLoading(); fetchMoreQuestions().then(() => renderQuizQuestion()); });
+}
+
+function renderQuizQuestion() {
+  const item = practiceHub.questions[practiceHub.index];
+  if (!item) return;
+  const isLast = practiceHub.index === practiceHub.questions.length - 1;
+  elements["practice-hub-body"].innerHTML =
+    '<article class="practice-card">' +
+      '<p class="practice-progress">Question ' + (practiceHub.index + 1) + '</p>' +
+      '<p class="practice-question">' + escapeHtml(item.question) + '</p>' +
+      '<button class="practice-toggle" id="practice-toggle" type="button">Show solution</button>' +
+      '<div class="practice-answer" id="practice-answer">' + escapeHtml(item.answer || "No solution provided.") + '</div>' +
+    '</article>' +
+    '<div class="practice-quiz-actions">' +
+      '<button class="primary-button" id="practice-next" type="button">' +
+        (isLast ? "Generate & continue →" : "Next question →") +
+      '</button>' +
+    '</div>';
+
+  document.getElementById("practice-toggle").addEventListener("click", (event) => {
+    const answer = document.getElementById("practice-answer");
+    const showing = answer.classList.toggle("show");
+    event.target.textContent = showing ? "Hide solution" : "Show solution";
+  });
+
+  document.getElementById("practice-next").addEventListener("click", practiceNext);
+}
+
+async function practiceNext() {
+  if (practiceHub.loadingMore) return;
+  const nextIndex = practiceHub.index + 1;
+  if (nextIndex < practiceHub.questions.length) {
+    practiceHub.index = nextIndex;
+    renderQuizQuestion();
+    return;
+  }
+  practiceHub.loadingMore = true;
+  const button = document.getElementById("practice-next");
+  if (button) { button.disabled = true; button.textContent = "Generating…"; }
+  const ok = await fetchMoreQuestions();
+  practiceHub.loadingMore = false;
+  if (ok) {
+    practiceHub.index = nextIndex;
+    renderQuizQuestion();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initialise);
