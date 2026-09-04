@@ -498,7 +498,7 @@ function renderSyllabi() {
       return renderSyllabusSemester(semester, group.title, semesterIndex);
     }).join("");
 
-    return '<details class="syllabus-group" ' + (group.id === "technology" ? "open" : "") + '>' +
+    return '<details class="syllabus-group">' +
       '<summary class="group-summary"><span class="group-index">' + twoDigits(groupIndex + 1) + '</span>' +
       '<span class="group-copy"><strong>' + escapeHtml(group.title) + '</strong><small>' +
       escapeHtml(group.subtitle) + ' · 2 semester folders</small></span><span class="group-count">' +
