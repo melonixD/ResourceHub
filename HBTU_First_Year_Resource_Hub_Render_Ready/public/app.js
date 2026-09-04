@@ -1,6 +1,9 @@
 const STORAGE = {
   theme: "helpdesk-theme",
   tasks: "helpdesk-tasks",
+  calcScale: "helpdesk-calc-scale",
+  calcSemesters: "helpdesk-calc-semesters",
+  calcDraft: "helpdesk-calc-draft",
 };
 
 const state = {
@@ -84,6 +87,7 @@ function cacheElements() {
     "task-empty", "timer-status", "timer-ring", "timer-value", "timer-toggle", "timer-reset",
     "practice-open", "practice-hub", "practice-hub-close", "practice-back", "practice-hub-heading",
     "practice-hub-body",
+    "calc-open", "calc-hub", "calc-hub-close", "calc-hub-body", "calc-tab-semester", "calc-tab-cgpa",
   ].forEach((id) => { elements[id] = document.getElementById(id); });
 }
 
@@ -95,6 +99,7 @@ async function initialise() {
   initialisePlanner();
   initialiseTimer();
   initialisePractice();
+  initialiseCalculator();
   bindBrowserControls();
 
   try {
@@ -896,6 +901,279 @@ async function practiceNext() {
     practiceHub.index = nextIndex;
     renderQuizQuestion();
   }
+}
+
+/* ---------- SGPA / CGPA Calculator ---------- */
+
+const DEFAULT_GRADE_SCALE = [
+  { id: "g10", label: "A+", points: 10 },
+  { id: "g9", label: "A", points: 9 },
+  { id: "g8", label: "B+", points: 8 },
+  { id: "g7", label: "B", points: 7 },
+  { id: "g6", label: "C+", points: 6 },
+  { id: "g5", label: "C", points: 5 },
+  { id: "g4", label: "D", points: 4 },
+  { id: "g0", label: "F", points: 0 },
+];
+
+function uid(prefix) {
+  return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+let calcState = {
+  tab: "semester",
+  scale: readStorage(STORAGE.calcScale, DEFAULT_GRADE_SCALE),
+  semesters: readStorage(STORAGE.calcSemesters, []),
+  courses: readStorage(STORAGE.calcDraft, []),
+  scaleOpen: false,
+  addSemesterOpen: false,
+};
+
+if (!calcState.courses.length) {
+  calcState.courses = [{ id: uid("c"), name: "", credits: 4, gradeId: calcState.scale[0].id }];
+}
+
+function initialiseCalculator() {
+  elements["calc-open"].addEventListener("click", () => {
+    closeMenu();
+    openCalcHub();
+  });
+  elements["calc-hub-close"].addEventListener("click", closeCalcHub);
+  elements["calc-tab-semester"].addEventListener("click", () => switchCalcTab("semester"));
+  elements["calc-tab-cgpa"].addEventListener("click", () => switchCalcTab("cgpa"));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && elements["calc-hub"].classList.contains("open")) {
+      closeCalcHub();
+    }
+  });
+
+  elements["calc-hub-body"].addEventListener("input", handleCalcInput);
+  elements["calc-hub-body"].addEventListener("click", handleCalcClick);
+  elements["calc-hub-body"].addEventListener("submit", handleCalcSubmit);
+}
+
+function openCalcHub() {
+  elements["calc-hub"].classList.add("open");
+  document.body.classList.add("no-scroll");
+  renderCalcBody();
+}
+
+function closeCalcHub() {
+  elements["calc-hub"].classList.remove("open");
+  document.body.classList.remove("no-scroll");
+}
+
+function switchCalcTab(tab) {
+  calcState.tab = tab;
+  elements["calc-tab-semester"].classList.toggle("active", tab === "semester");
+  elements["calc-tab-cgpa"].classList.toggle("active", tab === "cgpa");
+  elements["calc-tab-semester"].setAttribute("aria-selected", tab === "semester" ? "true" : "false");
+  elements["calc-tab-cgpa"].setAttribute("aria-selected", tab === "cgpa" ? "true" : "false");
+  renderCalcBody();
+}
+
+function renderCalcBody() {
+  elements["calc-hub-body"].innerHTML = calcState.tab === "semester" ? renderSemesterTabHtml() : renderCgpaTabHtml();
+}
+
+function gradeOptionsHtml(selectedId) {
+  return calcState.scale.map((grade) =>
+    '<option value="' + grade.id + '"' + (grade.id === selectedId ? " selected" : "") + '>' +
+      escapeHtml(grade.label) + " (" + grade.points + ")</option>"
+  ).join("");
+}
+
+function computeSgpa(courses, scale) {
+  let totalCredits = 0;
+  let totalPoints = 0;
+  courses.forEach((course) => {
+    const credits = Number(course.credits) || 0;
+    const grade = scale.find((item) => item.id === course.gradeId);
+    const points = grade ? grade.points : 0;
+    totalCredits += credits;
+    totalPoints += credits * points;
+  });
+  const sgpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+  return { totalCredits, totalPoints, sgpa };
+}
+
+function renderCourseRowHtml(course) {
+  return '<div class="calc-row" data-course-row="' + course.id + '">' +
+    '<input class="calc-input" type="text" data-field="name" data-id="' + course.id +
+      '" placeholder="Subject (optional)" value="' + escapeHtml(course.name) + '" />' +
+    '<input class="calc-input" type="number" min="0" max="20" step="1" data-field="credits" data-id="' +
+      course.id + '" value="' + escapeHtml(course.credits) + '" aria-label="Credits" />' +
+    '<select class="calc-input" data-field="gradeId" data-id="' + course.id + '" aria-label="Grade">' +
+      gradeOptionsHtml(course.gradeId) + '</select>' +
+    '<button class="calc-remove" type="button" data-action="remove-course" data-id="' + course.id +
+      '" aria-label="Remove subject">×</button></div>';
+}
+
+function renderSemesterTabHtml() {
+  const { totalCredits, sgpa } = computeSgpa(calcState.courses, calcState.scale);
+  const rows = calcState.courses.map(renderCourseRowHtml).join("");
+  return (
+    '<p class="calc-section-label">Subjects this semester</p>' +
+    rows +
+    '<button class="calc-add-button" type="button" data-action="add-course">+ Add subject</button>' +
+    '<div class="calc-result-card"><div><span>SGPA</span><br /><span class="calc-result-sub">' +
+      totalCredits + (totalCredits === 1 ? " credit" : " credits") + '</span></div>' +
+      '<span class="calc-result-value">' + sgpa.toFixed(2) + '</span></div>' +
+    '<div class="calc-save-row">' +
+      '<input class="calc-input" type="text" id="calc-semester-label" placeholder="Label, e.g. Semester 3" />' +
+      '<button class="primary-button" type="button" data-action="save-semester">Save to CGPA</button></div>' +
+    '<button class="calc-link-button" type="button" data-action="toggle-scale">' +
+      (calcState.scaleOpen ? "Hide grading scale" : "Customize grading scale") + '</button>' +
+    (calcState.scaleOpen ? renderScalePanelHtml() : "")
+  );
+}
+
+function renderScalePanelHtml() {
+  const rows = calcState.scale.map((grade) =>
+    '<div class="calc-scale-row">' +
+      '<input class="calc-input" type="text" data-scale-field="label" data-scale-id="' + grade.id +
+        '" value="' + escapeHtml(grade.label) + '" />' +
+      '<input class="calc-input" type="number" min="0" max="10" step="0.1" data-scale-field="points" data-scale-id="' +
+        grade.id + '" value="' + grade.points + '" />' +
+      '<button class="calc-remove" type="button" data-action="remove-grade" data-id="' + grade.id +
+        '" aria-label="Remove grade">×</button></div>'
+  ).join("");
+  return '<div class="calc-scale-panel">' + rows +
+    '<button class="calc-add-button" type="button" data-action="add-grade">+ Add grade</button></div>';
+}
+
+function renderCgpaTabHtml() {
+  const semesters = calcState.semesters;
+  const totalCredits = semesters.reduce((sum, item) => sum + item.credits, 0);
+  const totalPoints = semesters.reduce((sum, item) => sum + item.points, 0);
+  const cgpa = totalCredits > 0 ? totalPoints / totalCredits : 0;
+
+  const list = semesters.length
+    ? semesters.map((item) =>
+        '<div class="calc-semester-item"><div><strong>' + escapeHtml(item.label) + '</strong>' +
+          '<small>' + item.credits + (item.credits === 1 ? " credit" : " credits") + '</small></div>' +
+          '<div><span class="calc-semester-sgpa">' + item.sgpa.toFixed(2) + '</span>' +
+          '<button class="calc-remove" type="button" data-action="remove-semester" data-id="' + item.id +
+          '" aria-label="Remove semester">×</button></div></div>'
+      ).join("")
+    : '<div class="empty-state"><h3>No semesters saved yet</h3><p>Compute an SGPA in the "This semester" tab and save it here, or add one manually below.</p></div>';
+
+  return (
+    '<p class="calc-section-label">Saved semesters</p>' +
+    list +
+    '<div class="calc-result-card"><div><span>CGPA</span><br /><span class="calc-result-sub">' +
+      totalCredits + (totalCredits === 1 ? " credit" : " credits") + ' across ' + semesters.length +
+      (semesters.length === 1 ? " semester" : " semesters") + '</span></div>' +
+      '<span class="calc-result-value">' + cgpa.toFixed(2) + '</span></div>' +
+    '<button class="calc-link-button" type="button" data-action="toggle-add-semester">' +
+      (calcState.addSemesterOpen ? "Cancel" : "+ Add a semester manually") + '</button>' +
+    (calcState.addSemesterOpen ? renderAddSemesterFormHtml() : "")
+  );
+}
+
+function renderAddSemesterFormHtml() {
+  return '<form class="calc-scale-panel" id="calc-add-semester-form">' +
+    '<input class="calc-input" type="text" id="calc-manual-label" placeholder="Label, e.g. Semester 2" required />' +
+    '<input class="calc-input" type="number" id="calc-manual-credits" placeholder="Total credits" min="1" max="60" step="1" required />' +
+    '<input class="calc-input" type="number" id="calc-manual-sgpa" placeholder="SGPA" min="0" max="10" step="0.01" required />' +
+    '<button class="primary-button" type="submit">Add semester</button></form>';
+}
+
+function handleCalcInput(event) {
+  const target = event.target;
+  const courseId = target.dataset.id;
+  const scaleId = target.dataset.scaleId;
+
+  if (courseId && target.dataset.field) {
+    const course = calcState.courses.find((item) => item.id === courseId);
+    if (!course) return;
+    course[target.dataset.field] = target.dataset.field === "credits" ? target.value : target.value;
+    saveStorage(STORAGE.calcDraft, calcState.courses);
+    if (target.dataset.field !== "name") {
+      const cursorEl = document.activeElement;
+      renderCalcBody();
+      const same = elements["calc-hub-body"].querySelector('[data-id="' + courseId + '"][data-field="' + target.dataset.field + '"]');
+      if (same && cursorEl === target) same.focus();
+    } else {
+      updateResultCardOnly();
+    }
+    return;
+  }
+
+  if (scaleId && target.dataset.scaleField) {
+    const grade = calcState.scale.find((item) => item.id === scaleId);
+    if (!grade) return;
+    grade[target.dataset.scaleField] = target.dataset.scaleField === "points" ? Number(target.value) : target.value;
+    saveStorage(STORAGE.calcScale, calcState.scale);
+  }
+}
+
+function updateResultCardOnly() {
+  const { totalCredits, sgpa } = computeSgpa(calcState.courses, calcState.scale);
+  const card = elements["calc-hub-body"].querySelector(".calc-result-value");
+  const sub = elements["calc-hub-body"].querySelector(".calc-result-sub");
+  if (card) card.textContent = sgpa.toFixed(2);
+  if (sub) sub.textContent = totalCredits + (totalCredits === 1 ? " credit" : " credits");
+}
+
+function handleCalcClick(event) {
+  const button = event.target.closest("[data-action]");
+  if (!button) return;
+  const action = button.dataset.action;
+
+  if (action === "add-course") {
+    calcState.courses.push({ id: uid("c"), name: "", credits: 4, gradeId: calcState.scale[0].id });
+    saveStorage(STORAGE.calcDraft, calcState.courses);
+    renderCalcBody();
+  } else if (action === "remove-course") {
+    calcState.courses = calcState.courses.filter((item) => item.id !== button.dataset.id);
+    if (!calcState.courses.length) {
+      calcState.courses.push({ id: uid("c"), name: "", credits: 4, gradeId: calcState.scale[0].id });
+    }
+    saveStorage(STORAGE.calcDraft, calcState.courses);
+    renderCalcBody();
+  } else if (action === "toggle-scale") {
+    calcState.scaleOpen = !calcState.scaleOpen;
+    renderCalcBody();
+  } else if (action === "add-grade") {
+    calcState.scale.push({ id: uid("g"), label: "New", points: 5 });
+    saveStorage(STORAGE.calcScale, calcState.scale);
+    renderCalcBody();
+  } else if (action === "remove-grade") {
+    if (calcState.scale.length <= 1) return;
+    calcState.scale = calcState.scale.filter((item) => item.id !== button.dataset.id);
+    saveStorage(STORAGE.calcScale, calcState.scale);
+    renderCalcBody();
+  } else if (action === "save-semester") {
+    const { totalCredits, totalPoints, sgpa } = computeSgpa(calcState.courses, calcState.scale);
+    if (totalCredits <= 0) return;
+    const labelInput = document.getElementById("calc-semester-label");
+    const label = (labelInput && labelInput.value.trim()) || "Semester " + (calcState.semesters.length + 1);
+    calcState.semesters.push({ id: uid("s"), label, credits: totalCredits, points: totalPoints, sgpa });
+    saveStorage(STORAGE.calcSemesters, calcState.semesters);
+    switchCalcTab("cgpa");
+  } else if (action === "remove-semester") {
+    calcState.semesters = calcState.semesters.filter((item) => item.id !== button.dataset.id);
+    saveStorage(STORAGE.calcSemesters, calcState.semesters);
+    renderCalcBody();
+  } else if (action === "toggle-add-semester") {
+    calcState.addSemesterOpen = !calcState.addSemesterOpen;
+    renderCalcBody();
+  }
+}
+
+function handleCalcSubmit(event) {
+  if (event.target.id !== "calc-add-semester-form") return;
+  event.preventDefault();
+  const label = document.getElementById("calc-manual-label").value.trim();
+  const credits = Number(document.getElementById("calc-manual-credits").value);
+  const sgpa = Number(document.getElementById("calc-manual-sgpa").value);
+  if (!label || !credits || Number.isNaN(sgpa)) return;
+  calcState.semesters.push({ id: uid("s"), label, credits, points: credits * sgpa, sgpa });
+  saveStorage(STORAGE.calcSemesters, calcState.semesters);
+  calcState.addSemesterOpen = false;
+  renderCalcBody();
 }
 
 document.addEventListener("DOMContentLoaded", initialise);
